@@ -15,11 +15,11 @@ def index():
 
 @app.route('/findcab')
 def findcab():
-    return render_template('about.html')
+    return render_template('find.html')
 
 @app.route('/offercab')
 def offercab():
-    return render_template('about.html')
+    return render_template('offer.html')
 
 @app.route('/contactus')
 def contactus():
