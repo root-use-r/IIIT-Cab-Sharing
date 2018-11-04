@@ -53,10 +53,10 @@ def register():
         address = form.address.data
 
 
-        with sql.connect("CabSharing.db") as con:
+        with sqlite3.connect("CabSharing.db") as con:
             cur = con.cursor()
-            cur.execute("INSERT INTO users(name, email, username, password,contact,address) VALUES(%s, %s, %s, %s, %s, %s)", (name, email, username, password,contact,address))
-            
+            cur.execute("INSERT INTO users(name, email, username, password,phone,address) VALUES(?,?,?,?,?,?)", (name, email, username, password,contact,address))
+             
             con.commit()
 
         flash('You are now registered and can log in', 'success')
@@ -73,16 +73,24 @@ def login():
         username = request.form['username']
         password_candidate = request.form['password']
 
-        # Create cursor
-        cur = mysql.connection.cursor()
+        # # Create cursor
+        # cur = mysql.connection.cursor()
 
-        # Get user by username
-        result = cur.execute("SELECT * FROM users WHERE username = %s", [username])
+        # # Get user by username
+        # result = cur.execute("SELECT * FROM users WHERE username = %s", [username])
 
+        con = sqlite3.connect("CabSharing.db")
+        con.row_factory = sqlite3.Row
+        cur = con.cursor()
+        result =cur.execute("select * from users where username = ?",[username])
+        
         if result > 0:
             # Get stored hash
             data = cur.fetchone()
-            password = data['password']
+            print "---------------------sanket-------------"
+            print data
+            print"--------------------------------------"
+            password = data["password"]
 
             # Compare Passwords
             # if sha256_crypt.verify(password_candidate, password):
@@ -92,7 +100,8 @@ def login():
                 session['username'] = username
 
                 flash('You are now logged in', 'success')
-                return redirect(url_for('dashboard'))
+                # return redirect(url_for('dashboard'))
+                return render_template('home.html')
             else:
                 error = 'Invalid login'
                 return render_template('login.html', error=error)
@@ -126,5 +135,5 @@ def logout():
 
 
 if __name__ == '__main__':
-    # app.secret_key='secret123'
+    app.secret_key='secret123'
     app.run(debug=True)
