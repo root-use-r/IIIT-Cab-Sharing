@@ -1,0 +1,54 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<!-- 
+<!DOCTYPE html>
+<html>
+    <head> -->
+        <!-- <title>Google SignIn</title>
+        <meta name="google-signin-client_id" content="272416681581-52u3ck9rlbt1hogin5nfjvtpbk2ku92t.apps.googleusercontent.com">
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+        <script src="Googlescript.js"></script>
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">  -->
+        <style>
+         .g-signin2{
+            margin-left: 500px;
+            margin-top: 200px;
+        }
+        .data{
+            display: none;
+        }
+        </style>
+    <script>
+function onSignIn(googleUser)
+{
+    var profile=googleUser.getBasicProfile();
+    $(".g-signin2").css("display","none");
+    $(".data").css("display","block");
+    $("#pic").attr('src',profile.getImageUrl());
+    $("#email").text(profile.getEmail());
+}
+
+function signOut()
+{
+    var auth2=gapi.auth2.getAuthInstance();
+    auth2.signOut().then(function(){
+        alert("You have successfully logged out");
+        $(".g-signin2").css("display","block");
+        $(".data").css("display","none");
+    });   
+}
+    </script>
+
+        <div class="g-signin2" data-onsuccess="onSignIn"></div>
+        <div class="data">
+            <p>Profile Details</p>
+            <img id="pic" class="img-circle" width="100" height="100"/>
+            <p>Email Id</p>
+            <p id="email" class="alert alert-danger"></p>
+            <button onclick="signOut()" class="btn btn-danger">SignOut</button>
+        </div>
+    <!-- </body>
+</html>         -->
+{% endblock %}

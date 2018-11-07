@@ -12,6 +12,9 @@ app = Flask(__name__)
 def index():
     return render_template('home.html')
 
+@app.route('/signin')
+def signin():
+    return render_template('Googlesignin.html')
 
 @app.route('/findcab')
 def findcab():
