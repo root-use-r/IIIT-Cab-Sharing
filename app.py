@@ -22,7 +22,7 @@ def findcab():
 
 @app.route('/offercab')
 def offercab():
-    return render_template('offer.html')
+    return render_template('offer_map.html')
 
 @app.route('/contactus')
 def contactus():
