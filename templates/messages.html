@@ -1,0 +1,29 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class=" container ">
+
+      <ul class="nav nav-tabs">
+        <li ><a  href="dashboard">Dashboard</a></li>
+        <li ><a  href="rides">Rides Offered</a></li>
+        <li ><a  href="bookings">Bookings</a></li>
+        <li class= "active"><a  href="messages">Messages</a></li>
+        <li ><a  href="#">Ride Alerts</a></li>
+        <li ><a  href="#">Profile</a></li>
+      </ul>
+      <br>
+
+</div>
+
+<div class="container text-center">
+
+      <div class="tab-pane fade in active text-left">
+              <br>
+              <p>You Currently have no messages </p>
+              <br><br>
+      </div>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,11 @@
+  .verify{
+    color: #00BFFF;
+  }
+  .verify-fail{
+    background-color: white;
+    color: red;
+  }
+
+  #username{
+    color: green;
+  }

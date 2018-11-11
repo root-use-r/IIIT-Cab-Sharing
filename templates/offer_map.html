@@ -14,22 +14,23 @@
     {% extends 'layout.html' %}
 
     {% block body %}
-    <div class="container " style="height: 100;width: 100">
-    <div class=" container split left">
+    <div class="container col-lg-10" style="height: 50%;width: 50%">
             <div>
               <h3>Ride Details</h3>
-                <form action="/action_page.php">
+                <form method="POST">
+
                   <div class="form-group"></div>
+                  <div class="well">
+                      <div class="form-group">
+                          <label for="date">Pick-up</label>
+                      <input id="origin-input" name="source" class="controls form-control" type="text" placeholder="Enter an origin location">
+                      </div>
 
-                  <div class="form-group">
-                      <label for="date">Pick-up</label>
-                  <input id="origin-input" class="controls form-control" type="text" placeholder="Enter an origin location">
+                      <div class="form-group">
+                          <label for="date">Drop-off</label>
+                      <input id="destination-input" name="destination" class="controls form-control" type="text" placeholder="Enter a destination location">
+                       </div>
                   </div>
-
-                  <div class="form-group">
-                      <label for="date">Drop-off</label>
-                  <input id="destination-input" class="controls form-control" type="text" placeholder="Enter a destination location">
-                   </div>
 
                   <div id="mode-selector" class="controls" style="display: none;">
                     <input type="radio" name="type" id="changemode-walking" >
@@ -42,48 +43,40 @@
                     <label for="changemode-driving">Driving</label>
                   </div>
 
-                  <div class="form-group">
-                  <label for="date">Date</label>
-                  <input type="date" name="bday" class=" controls form-control">
-                  </div>
-                  <div class="form-group">
-                  <label for="time">Time</label>
-                  <input type="time" name="usr_time" class="form-control">
+                  <div class ="well" >
+                      <div class="form-group">
+                      <label for="date">Date</label>
+                      <input type="date" name="date" class=" controls form-control">
+                      </div>
+                      <div class="form-group">
+                      <label for="time">Time</label>
+                      <input type="time" name="time" class="form-control">
+                      </div>
                   </div>
                   <div class="form-group">
                   <label for="price">Price per co-traveller</label>
-                  <input type="number" name="quantity" class="form-control">
+                  <input type="number" name="price" class="form-control">
                   </div>
                   <div class="form-group">
                   <label for="seats">Number of seats</label>
-                  <input type="number" name="quantity" class="form-control" min="1" max="5">
+                  <input type="number" name="seats" class="form-control" min="1" max="5">
                   </div>
                   <div class="form-group">
                   <label for="rdetails">Ride Details</label>
                   <br>
-                  <textarea rows="4" cols="100" name="comment" class="form-control" form="usrform">Anything to add about your ride...</textarea>
+                  <textarea rows="4" cols="100" name="details" class="form-control" form="usrform">Anything to add about your ride...</textarea>
                   <br>
+
               </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
               </div>
 
 
-
-
-
-
-
-
-
-
-
-    
     </div>
-    <div class=" container split right" >
+    <div class=" container split right col-lg-10" >
       <h3>Ride Summary</h3>
-    <div id="map" style="height: 50%; width:50;"></div>
-    </div>
+    <div id="map" style="height: 50%; width:50%;"></div>
     </div>
     <script>
       // This example requires the Places library. Include the libraries=places

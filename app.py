@@ -20,13 +20,73 @@ def signin():
 def findcab():
     return render_template('find.html')
 
-@app.route('/offercab')
-def offercab():
-    return render_template('offer_map.html')
+# @app.route('/offercab')
+# def offercab():
+#     return render_template('offer_map.html')
+
+@app.route('/dashboard')
+def tdashboard():
+    return render_template('tdashboard.html')
+
+@app.route('/rides')
+def rides():
+    return render_template('rides.html')
+
+@app.route('/bookings')
+def bookings():
+    return render_template('bookings.html')
+
+@app.route('/messages')
+def messages():
+    return render_template('messages.html')
+
 
 @app.route('/contactus')
 def contactus():
     return render_template('about.html')
+
+
+# class OfferedSeat(Form):
+#     source = StringField('Source')
+#     destination = StringField('Destination')
+#     date = StringField('Date')
+#     time = StringField('Time ')
+#     offeredSeats = StringField('Offered Seats')
+#     offeredPrice = StringField('Offered Price')
+
+@app.route('/offer', methods=['GET', 'POST'])
+def offer():
+    if request.method == 'POST':
+        # Get Form Fields
+        source = request.form['source']
+        destination = request.form['destination']
+        print()
+        print(source)
+        print(destination)
+
+
+    # form = OfferedSeat(request.form)
+    # if request.method == 'POST' and form.validate():
+    #     source = form.source.data
+    #     destination = form.destination.data
+    #     date = form.date.data
+    #     time = form.time.data
+    #     offeredPrice = form.offeredPrice.data
+    #     offeredPrice = int(offeredPrice)
+    #     offeredSeats = form.offeredSeats.data
+    #     offeredSeats = int(offeredSeats)
+    #
+    #     with sqlite3.connect("CabSharing.db") as con:
+    #         cur = con.cursor()
+    #         cur.execute("INSERT INTO rides_offered(userName , source, destination, offeredDate, offeredTime , offeredPrice , offeredSeats , valid) VALUES(? , ? , ? , ? , ? , ? , ? , ? )" , ("tarun" , source, destination, date, time, offeredPrice, offeredSeats , 0))
+    #
+    #         con.commit()
+    #
+    #     flash('Your Post has been put live ', 'success')
+    #
+    #     return redirect(url_for('home'))
+    return render_template('offer_map.html')
+
 
 class RegisterForm(Form):
     name = StringField('Name', [validators.Length(min=1, max=50)])
@@ -59,7 +119,7 @@ def register():
         with sqlite3.connect("CabSharing.db") as con:
             cur = con.cursor()
             cur.execute("INSERT INTO users(name, email, username, password,phone,address) VALUES(?,?,?,?,?,?)", (name, email, username, password,contact,address))
-             
+
             con.commit()
 
         flash('You are now registered and can log in', 'success')
@@ -83,33 +143,50 @@ def login():
         # result = cur.execute("SELECT * FROM users WHERE username = %s", [username])
 
         con = sqlite3.connect("CabSharing.db")
-        con.row_factory = sqlite3.Row
+        # con.row_factory = sqlite3.Row
         cur = con.cursor()
-        result =cur.execute("select * from users where username = ?",[username])
-        
-        if result > 0:
+        result = []
+        cur.execute("select * from users where username = ?",[username])
+        result = cur.fetchall()
+        count = len(result)
+
+        # print(count)
+        # for data in result:
+        #     print ("---------------------sanket-------------")
+        #     print (data)
+        #     print ("--------------------------------------")
+        #     password = data[1]
+        #     print(password)
+
+        # print(result.rowcount)
+        if (count) > 0:
             # Get stored hash
-            data = cur.fetchone()
-            print "---------------------sanket-------------"
-            print data
-            print"--------------------------------------"
-            password = data["password"]
+            # data = result.fetchone()
+            password =""
+            for data in result:
+                print ("---------------------sanket-------------")
+                print (data)
+                print ("--------------------------------------")
+                password = data[1]
+                print(password)
 
-            # Compare Passwords
-            # if sha256_crypt.verify(password_candidate, password):
-            if (password_candidate == password):
-                # Passed
-                session['logged_in'] = True
-                session['username'] = username
+                print("here")
+                print(password)
+                # Compare Passwords
+                # if sha256_crypt.verify(password_candidate, password):
+                if (password_candidate == password):
+                    # Passed
+                    session['logged_in'] = True
+                    session['username'] = username
 
-                flash('You are now logged in', 'success')
-                # return redirect(url_for('dashboard'))
-                return render_template('home.html')
-            else:
-                error = 'Invalid login'
-                return render_template('login.html', error=error)
-            # Close connection
-            cur.close()
+                    # flash('You are now logged in', 'success')
+                    # return redirect(url_for('dashboard'))
+                    return render_template('tdashboard.html' , name = username )
+                else:
+                    error = 'Invalid login'
+                    return render_template('login.html', error=error)
+                # Close connection
+                cur.close()
         else:
             error = 'Username not found'
             return render_template('login.html', error=error)

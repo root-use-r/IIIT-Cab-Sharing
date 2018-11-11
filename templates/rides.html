@@ -1,0 +1,72 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class=" container ">
+
+      <ul class="nav nav-tabs">
+        <li ><a href="dashboard">Dashboard</a></li>
+        <li class= "active"><a href="rides">Rides Offered</a></li>
+        <li ><a href="bookings">Bookings</a></li>
+        <li ><a href="messages">Messages</a></li>
+        <li ><a href="#">Ride Alerts</a></li>
+        <li ><a href="#">Profile</a></li>
+      </ul>
+      <br>
+
+</div>
+
+<div class="container text-center">
+
+    <div  class="tab-pane fade in active">
+      <ul class="nav nav-pills">
+        <li class="active"><a data-toggle="pill" href="#upcoming-rides">Upcoming Rides</a></li>
+        <li><a data-toggle="pill" href="#past-rides">Past Rides</a></li>
+        <li><a data-toggle="pill" href="#archived-rides">Archived Rides</a></li>
+      </ul>
+
+      <div class="tab-content">
+
+        <div id="upcoming-rides" class="tab-pane fade in active text-left">
+          <br>
+          <p>You don't have any upcoming rides yet</p>
+            <!-- <form method="get" action="/offer_map.html"> -->
+              <button type="button" class="btn-success" onclick="window.location.href='/offercab'">Offer a ride</button>
+            <!-- </form> -->
+          <br><br>
+          <div class="row">
+            <div class="col-sm-8">
+              <div class="panel panel-default text-left">
+                <div class="panel-body">
+                  <span class="glyphicon glyphicon-road"></span>
+                  <strong class="lead"> Rides <span class="badge" >0</span></strong>
+                </div>
+                <div class="well-lg">
+                  <p >Upcoming rides will come here</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="past-rides" class="tab-pane fade text-left">
+          <br>
+          <p>No past rides yet</p>
+
+        </div>
+
+        <div id="archived-rides" class="tab-pane fade text-left">
+          <br>
+          <p>No archived rides yet</p>
+        </div>
+      </div>
+
+      <div>
+        <span class="left-text"></span>
+      </div>
+    </div>
+
+</div>
+
+
+{% endblock %}

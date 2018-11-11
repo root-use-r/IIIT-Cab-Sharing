@@ -1,0 +1,133 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class=" container ">
+  <!-- <div class="container-fluid"> -->
+    <!-- <div class="collapse navbar-collapse" id="myNavbar"> -->
+      <!-- <ul class="nav navbar-nav"> -->
+      <ul class="nav nav-tabs">
+        <li class= "active"><a  href="dashboard">Dashboard</a></li>
+        <li ><a  href="rides">Rides Offered</a></li>
+        <li ><a  href="bookings">Bookings</a></li>
+        <li ><a  href="messages">Messages</a></li>
+        <li ><a  href="#">Ride Alerts</a></li>
+        <li ><a  href="#">Profile</a></li>
+      </ul>
+      <br>
+      <!-- <form class="navbar-form navbar-right" role="search">
+        <div class="form-group input-group">
+          <input type="text" class="form-control" placeholder="Search..">
+          <span class="input-group-btn">
+            <button class="btn btn-default" type="button">
+              <span class="glyphicon glyphicon-search"></span>
+            </button>
+          </span>
+        </div>
+      </form> -->
+      <!-- <ul class="nav navbar-nav navbar-right">
+        <li><a href="#"><span class="glyphicon glyphicon-user"></span> My Account</a></li>
+      </ul> -->
+    <!-- </div> -->
+  <!-- </div> -->
+</div>
+
+<div class="container text-center">
+
+
+            <div class="tab-pane fade in active">
+              <div class="row">
+                <!-- <div class="col-sm-3 well "> -->
+                <div class="col-sm-3" style='border:2em'>
+                  <div class="well">
+                    <p><a href="#">My Profile</a></p>
+                    <p  >Hello <strong><em id="username">{{name}}</em></strong></p>
+                    <img src="avatar.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                  </div>
+                  <div class="well">
+                    <p><a href="#" id="interests">Interests</a></p>
+                    <p>
+                      <span >Tell Your Interests Here</span>
+                    </p>
+                  </div>
+                  <div class="well">
+                    <div>
+                      <p class="text-left"><b>Member Verification</b></p>
+                    </div>
+                    <div class="text-left ">
+                      <p ><span class="verify-fail glyphicon glyphicon-alert"></span><a href="#" class="verify" id="verify-phone"> Verify your phone number</a></p>
+                      <p ><span class="verify-fail glyphicon glyphicon-alert"></span><a href="#" class="verify" id="verify-email"> Verify your email</a></p>
+                      <p ><span class="verify-fail glyphicon glyphicon-alert"></span><a href="#" class="verify" id="verify-id"> Verify your id</a></p>
+                    </div>
+                  </div>
+                  <!-- <div class="alert alert-success fade in">
+                    <a href="#" class="close" data-dismiss="alert" aria-label="close">×</a>
+                    <p><strong>Ey!</strong></p>
+                    People are looking at your profile. Find out who.
+                  </div> -->
+                  <!-- <p><a href="#">Link</a></p>
+                  <p><a href="#">Link</a></p>
+                  <p><a href="#">Link</a></p> -->
+                  <div class="well">
+                    <p class="text-left"><b>Member Activity</b></p>
+                    <p id='user-joining-date' class="text-left"> User's joining date in this area </p>
+                  </div>
+                </div>
+                <div class="col-sm-7">
+
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="panel panel-default text-left">
+                        <div class="panel-body">
+                          <!-- <p contenteditable="true">Status: Feeling Blue</p> -->
+                          <span class="glyphicon glyphicon-bell"></span>
+                          <strong class="lead">Notifications <span class="badge border border-1">1</span></strong>
+                        </div>
+                        <div class="well-lg">
+                          <p>Notify the user about all the offers and other notifications here</p>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="panel panel-default text-left">
+                        <div class="panel-body">
+                          <!-- <p contenteditable="true">Status: Feeling Blue</p> -->
+                          <span class="glyphicon glyphicon-envelope"></span>
+                          <strong class="lead"> Messages <span class="badge border border-1">0</span></strong>
+                        </div>
+                        <div class="well-lg">
+                          <!-- <p>Just Forgot that I had to mention something about someone to someone about how I forgot something, but now I forgot it. Ahh, forget it! Or wait. I remember.... no I don't.</p> -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- <div class="row">
+                    <div class="col-sm-12">
+                    </div>
+                  </div>
+                </div> -->
+                <!-- <div class="col-sm-2 well">
+                  <div class="thumbnail">
+                    <p>Upcoming Events:</p>
+                    <img src="paris.jpg" alt="Paris" width="400" height="300">
+                    <p><strong>Paris</strong></p>
+                    <p>Fri. 27 November 2015</p>
+                    <button class="btn btn-primary">Info</button>
+                  </div>
+                  <div class="well">
+                    <p>ADS</p>
+                  </div>
+                  <div class="well">
+                    <p>ADS</p>
+                  </div>-->
+                </div>
+              </div>
+            </div>
+
+</div>
+
+{% endblock %}
