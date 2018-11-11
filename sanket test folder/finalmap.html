@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Place Autocomplete and Directions</title>
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+    <link rel="stylesheet" type="text/css" href="design.css">
+    <meta charset="utf-8">
+    
+  </head>
+  <body>
+        <div class="split left">
+            <div>
+              <h3>Ride Details</h3>
+                <form action="/action_page.php">
+                  <div class="form-group"></div>
+
+                  <div class="form-group">
+                      <label for="date">Pick-up</label>
+                  <input id="origin-input" class="controls form-control" type="text" placeholder="Enter an origin location">
+                  </div>
+
+                  <div class="form-group">
+                      <label for="date">Drop-off</label>
+                  <input id="destination-input" class="controls form-control" type="text" placeholder="Enter a destination location">
+                   </div>
+
+                  <div id="mode-selector" class="controls" style="display: none;">
+                    <input type="radio" name="type" id="changemode-walking" >
+                    <label for="changemode-walking">Walking</label>
+
+                    <input type="radio" name="type" id="changemode-transit">
+                    <label for="changemode-transit">Transit</label>
+
+                    <input type="radio" name="type" id="changemode-driving" checked="checked">
+                    <label for="changemode-driving">Driving</label>
+                  </div>
+
+                  
+              </div>
+                  <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+              </div>
+
+
+
+
+
+
+
+
+
+
+
+    
+    </div>
+    <div class="split right">
+      <h3>Ride Summary</h3>
+    <div id="map" style ="left: 10;right :10; bottom:10;"></div>
+    </div>
+    <script>
+      // This example requires the Places library. Include the libraries=places
+      // parameter when you first load the API. For example:
+      // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
+      function initMap() {
+        var map = new google.maps.Map(document.getElementById('map'), {
+          mapTypeControl: false,
+          center: {lat: 17.3850, lng: 78.4867},
+          zoom: 13
+        });
+
+        new AutocompleteDirectionsHandler(map);
+      }
+
+       /**
+        * @constructor
+       */
+      function AutocompleteDirectionsHandler(map) {
+        this.map = map;
+        this.originPlaceId = null;
+        this.destinationPlaceId = null;
+        this.travelMode = 'DRIVING';
+        var originInput = document.getElementById('origin-input');
+        var destinationInput = document.getElementById('destination-input');
+        var modeSelector = document.getElementById('mode-selector');
+        this.directionsService = new google.maps.DirectionsService;
+        this.directionsDisplay = new google.maps.DirectionsRenderer;
+        this.directionsDisplay.setMap(map);
+
+        var originAutocomplete = new google.maps.places.Autocomplete(
+            originInput, {placeIdOnly: true});
+        var destinationAutocomplete = new google.maps.places.Autocomplete(
+            destinationInput, {placeIdOnly: true});
+
+        this.setupClickListener('changemode-walking', 'WALKING');
+        this.setupClickListener('changemode-transit', 'TRANSIT');
+        this.setupClickListener('changemode-driving', 'DRIVING');
+
+        this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
+        this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
+
+        // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+        // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
+        // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+      }
+
+      // Sets a listener on a radio button to change the filter type on Places
+      // Autocomplete.
+      AutocompleteDirectionsHandler.prototype.setupClickListener = function(id, mode) {
+        var radioButton = document.getElementById(id);
+        var me = this;
+        radioButton.addEventListener('click', function() {
+          me.travelMode = mode;
+          me.route();
+        });
+      };
+
+      AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function(autocomplete, mode) {
+        var me = this;
+        autocomplete.bindTo('bounds', this.map);
+        autocomplete.addListener('place_changed', function() {
+          var place = autocomplete.getPlace();
+          if (!place.place_id) {
+            window.alert("Please select an option from the dropdown list.");
+            return;
+          }
+          if (mode === 'ORIG') {
+            me.originPlaceId = place.place_id;
+          } else {
+            me.destinationPlaceId = place.place_id;
+          }
+          me.route();
+        });
+
+      };
+
+      AutocompleteDirectionsHandler.prototype.route = function() {
+        if (!this.originPlaceId || !this.destinationPlaceId) {
+          return;
+        }
+        var me = this;
+        
+        var lat1,lat2,lon1,lon2;
+
+        geocoder = new google.maps.Geocoder();
+        var address = document.getElementById("origin-input").value;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          lat1=results[0].geometry.location.lat();
+          lon1=results[0].geometry.location.lng();
+          console.log("source"+lat1);
+          console.log("source"+lon1);
+        
+        } 
+
+        
+
+      else {
+        alert("Geocode was not successful for the following reason: " + status);
+      }
+    });
+
+    var address = document.getElementById("destination-input").value;
+        geocoder.geocode( { 'address': address}, function(results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          lat2=results[0].geometry.location.lat();
+          lon2=results[0].geometry.location.lng();
+          console.log("dest"+lat2);
+          console.log("dest"+lon2);
+        
+        } 
+        else {
+        alert("Geocode was not successful for the following reason: " + status);
+      }
+    });
+
+
+
+
+
+console.log(typeof(lat1));
+ var R = 6371; // Radius of the earth in km
+  var dLat = lat2-lat1;  // deg2rad below
+  var dLon = lon2-lon1; 
+  var a = 
+    Math.sin(dLat/2) * Math.sin(dLat/2) +
+    Math.cos(lat1) * Math.cos(lat2) * 
+    Math.sin(dLon/2) * Math.sin(dLon/2)
+    ; 
+  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
+  var d = R * c; // Distance in km
+  console.log(a);
+
+        this.directionsService.route({
+          origin: {'placeId': this.originPlaceId},
+          destination: {'placeId': this.destinationPlaceId},
+          travelMode: this.travelMode
+        }, function(response, status) {
+          if (status === 'OK') {
+            me.directionsDisplay.setDirections(response);
+            
+          } else {
+            window.alert('Directions request failed due to ' + status);
+          }
+        });
+      };
+
+
+      
+
+
+  
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtw56_J9YjK6Kptzau4VLaQNSKL4hnjdw&libraries=places&callback=initMap"
+        async defer></script>
+        
+  </body>
+</html>
