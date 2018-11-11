@@ -33,9 +33,15 @@
 
                     <input type="radio" name="type" id="changemode-driving" checked="checked">
                     <label for="changemode-driving">Driving</label>
+
+                    
                   </div>
 
-                  
+                  <input id="lat1" name="lat1" class="controls form-control" type="text" placeholder="none">
+                  <input id="long1" name="long1" class="controls form-control" type="text" placeholder="none">
+                  <input id="lat2" name="lat2" class="controls form-control" type="text" placeholder="none">
+                  <input id="long2" name="long2" class="controls form-control" type="text" placeholder="none">
+                     
               </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
                 </form>
@@ -150,6 +156,8 @@
           lon1=results[0].geometry.location.lng();
           console.log("source"+lat1);
           console.log("source"+lon1);
+          document.getElementById("lat1").value=lat1;
+          document.getElementById("long1").value=lon1;
         
         } 
 
@@ -167,6 +175,8 @@
           lon2=results[0].geometry.location.lng();
           console.log("dest"+lat2);
           console.log("dest"+lon2);
+          document.getElementById("lat2").value=lat2;
+          document.getElementById("long2").value=lon2;
         
         } 
         else {
@@ -178,18 +188,6 @@
 
 
 
-console.log(typeof(lat1));
- var R = 6371; // Radius of the earth in km
-  var dLat = lat2-lat1;  // deg2rad below
-  var dLon = lon2-lon1; 
-  var a = 
-    Math.sin(dLat/2) * Math.sin(dLat/2) +
-    Math.cos(lat1) * Math.cos(lat2) * 
-    Math.sin(dLon/2) * Math.sin(dLon/2)
-    ; 
-  var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
-  var d = R * c; // Distance in km
-  console.log(a);
 
         this.directionsService.route({
           origin: {'placeId': this.originPlaceId},

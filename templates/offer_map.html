@@ -69,6 +69,11 @@
 
               </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
+
+                  <input id="lat1" name="lat1" class="controls form-control" type="text" placeholder="none">
+                  <input id="long1" name="long1" class="controls form-control" type="text" placeholder="none">
+                  <input id="lat2" name="lat2" class="controls form-control" type="text" placeholder="none">
+                  <input id="long2" name="long2" class="controls form-control" type="text" placeholder="none">
                 </form>
               </div>
 
@@ -160,6 +165,46 @@
           return;
         }
         var me = this;
+
+        var lat1,lat2,lon1,lon2;
+
+          geocoder = new google.maps.Geocoder();
+          var address = document.getElementById("origin-input").value;
+          geocoder.geocode( { 'address': address}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            lat1=results[0].geometry.location.lat();
+            lon1=results[0].geometry.location.lng();
+            console.log("source"+lat1);
+            console.log("source"+lon1);
+            document.getElementById("lat1").value=lat1;
+            document.getElementById("long1").value=lon1;
+
+          } 
+
+
+
+          else {
+          alert("Geocode was not successful for the following reason: " + status);
+          }
+          });
+
+          var address = document.getElementById("destination-input").value;
+          geocoder.geocode( { 'address': address}, function(results, status) {
+          if (status == google.maps.GeocoderStatus.OK) {
+            lat2=results[0].geometry.location.lat();
+            lon2=results[0].geometry.location.lng();
+            console.log("dest"+lat2);
+            console.log("dest"+lon2);
+            document.getElementById("lat2").value=lat2;
+            document.getElementById("long2").value=lon2;
+
+          } 
+          else {
+          alert("Geocode was not successful for the following reason: " + status);
+          }
+          });
+
+
 
         this.directionsService.route({
           origin: {'placeId': this.originPlaceId},
