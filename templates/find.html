@@ -1,34 +1,124 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+<center>
+    <h2><strong>Find a ride</strong><br></h2>
 
-<h2 class="text-center"><strong>Find a ride</strong><br><br></h2>
 
-<div class="text-center">
     <form method="POST">
 
-    <div class="form-group">
-        <input type="text" name="source" class="form-control input-lg well" placeholder="Leaving From">
-    </div>
+        <div class="form-group">
+            <input type="text" name="source" id="source" class="form-control input-lg well" style="width:50%;"
+                placeholder="Leaving From">
+        </div>
 
-    <div class="form-group">
-        <input type="text" name="destination" class="form-control input-lg well" placeholder="Going To">
-    </div>
-    <div class="form-group">
-    <label for="date">Date</label>
-    <input type="date" name="bday" class="form-control">
-    </div>
+        <div class="form-group">
+            <input type="text" name="destination" id="destination" class="form-control input-lg well" style="width:50%;"
+                placeholder="Going To">
+        </div>
+        <div class="form-group">
+            <label for="date">Date</label>
+            <input type="date" name="date" id="data" style="width:50%;" class="form-control">
+        </div>
 
-    <div class="form-group">
-    <label for="time">Time</label>
-    <input type="time" name="usr_time" class="form-control">
-    </div>
+        <div class="form-group">
+            <label for="time">Time</label>
+            <input type="time" name="time" id="time" style="width:50%;" class="form-control">
+        </div>
 
 
-</div>
-  <div class="text-center">
-    <button type="submit" class="btn btn-info">Submit</button>
-  </div>
+
+        <button type="submit" class="btn btn-info">Submit</button>
+
+        <div id="mode-selector" class="controls" style="display: none;">
+            <input id="lat1" name="lat1" class="controls form-control" type="text" placeholder="none">
+            <input id="long1" name="long1" class="controls form-control" type="text" placeholder="none">
+            <input id="lat2" name="lat2" class="controls form-control" type="text" placeholder="none">
+            <input id="long2" name="long2" class="controls form-control" type="text" placeholder="none">
+        </div>
     </form>
+</center>
 
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script>
+<script type="text/javascript">
+    function initialize() {
+        var address = (document.getElementById('source'));
+        var address2 = (document.getElementById('destination'));
+        var autocomplete = new google.maps.places.Autocomplete(address);
+        var autocomplete2 = new google.maps.places.Autocomplete(address2);
+        autocomplete.setTypes(['geocode']);
+        autocomplete2.setTypes(['geocode']);
+
+        google.maps.event.addListener(autocomplete, 'place_changed', function () {
+            var place = autocomplete.getPlace();
+            if (!place.geometry) {
+                return;
+            }
+
+            geocoder = new google.maps.Geocoder();
+            var address = document.getElementById("source").value;
+            geocoder.geocode({ 'address': address }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+
+                    document.getElementById("lat1").value = results[0].geometry.location.lat();
+                    document.getElementById("long1").value = results[0].geometry.location.lng();
+                }
+
+                else {
+                    alert("Geocode was not successful for the following reason: " + status);
+                }
+            });
+
+
+
+            var address = '';
+            if (place.address_components) {
+                address = [
+                    (place.address_components[0] && place.address_components[0].short_name || ''),
+                    (place.address_components[1] && place.address_components[1].short_name || ''),
+                    (place.address_components[2] && place.address_components[2].short_name || '')
+                ].join(' ');
+            }
+        });
+
+        google.maps.event.addListener(autocomplete2, 'place_changed', function () {
+            var place = autocomplete2.getPlace();
+            if (!place.geometry) {
+                return;
+            }
+
+            geocoder = new google.maps.Geocoder();
+            var address2 = document.getElementById("destination").value;
+            geocoder.geocode({ 'address': address2 }, function (results, status) {
+                if (status == google.maps.GeocoderStatus.OK) {
+                    document.getElementById("lat2").value = results[0].geometry.location.lat();
+                    document.getElementById("long2").value = results[0].geometry.location.lng();
+                }
+
+                else {
+                    alert("Geocode was not successful for the following reason: " + status);
+                }
+            });
+
+
+            var address = '';
+            if (place.address_components) {
+                address2 = [
+                    (place.address_components[0] && place.address_components[0].short_name || ''),
+                    (place.address_components[1] && place.address_components[1].short_name || ''),
+                    (place.address_components[2] && place.address_components[2].short_name || '')
+                ].join(' ');
+            }
+        });
+
+
+
+
+    }
+
+
+
+    google.maps.event.addDomListener(window, 'load', initialize);
+
+</script>
 {% endblock %}

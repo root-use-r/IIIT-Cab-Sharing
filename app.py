@@ -1,6 +1,8 @@
 from flask import Flask, render_template, flash, redirect, url_for, session, request, logging
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from functools import wraps
+from math import sin, cos, sqrt, atan2, radians
+import time
 import sqlite3
 
 app = Flask(__name__)
@@ -33,18 +35,53 @@ def findcab():
         print("here")
         source = request.form['source']
         destination = request.form['destination']
-        # date = request.form['date']
-        # time = request.form['time']
+        date = request.form['date']
+        ride_time = request.form['time']
+        print source
+        print destination
+        print date
+        print ride_time
+        R = 6373.0
+        lt1=request.form['lat1']
+        ln1=request.form['long1']
+        lt2=request.form['lat2']
+        ln2=request.form['long2']
+        print lt1
+        print ln1
+        print lt2
+        print ln2
+        lat1 = radians(float(lt1))
+        lon1 = radians(float(ln1))
+        lat2 = radians(float(lt2))
+        lon2 = radians(float(ln2))
 
+        dlon = lon2 - lon1
+        dlat = lat2 - lat1
+
+        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+        c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+        distance = R * c
+
+        print("Result:", distance)
         con = sqlite3.connect("CabSharing.db")
         cur = con.cursor()
         result = []
-        cur.execute("select * from rides_offered where source = ? and destination = ?" ,(source, destination,) )
+        cur.execute("select * from rides_offered" )
         result = cur.fetchall()
-        print("Here")
-        for data in result:
-            print(data)
-        return render_template('findresults.html' , result = result)
+
+        print result[0][8]
+        date=time.strptime(result[0][8],"%Y-%m-%d")
+        print date
+
+        for i in range(len(result)):
+            print result[i][0]
+
+        # print("Here")
+        # for data in result:
+        #     print(data)
+        # return render_template('findresults.html' , result = result)
+        return render_template('about.html')
     return render_template('find.html')
 
 @app.route('/rides')
@@ -169,7 +206,7 @@ def register():
     return render_template('register.html', form=form)
 
 
-# User login
+# User login 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
