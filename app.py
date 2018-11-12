@@ -28,7 +28,7 @@ def ride(userName):
     cur = con.cursor()
     result = cur.execute("SELECT * FROM rides_offered WHERE userName = ?", [userName])
     rides = cur.fetchone()
-    print rides
+    # print (rides)
     result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [userName])
     user = cur.fetchone()
     return render_template( 'ride.html', rides=rides,user=user )
@@ -42,13 +42,13 @@ def foundrides():
     cur = con.cursor()
 
     # Get rides
-    # Show rides only from the user logged in 
+    # Show rides only from the user logged in
     result = cur.execute("SELECT * FROM rides_offered")
 
     rides = cur.fetchall()
     total_rides = len(rides)
-    print 
-    print rides
+    print
+    # print rides
     for i in range(total_rides):
         result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [rides[i][1]])
         user = cur.fetchone()
@@ -81,19 +81,19 @@ def findcab():
         destination = request.form['destination']
         date = request.form['date']
         ride_time = request.form['time']
-        print source
-        print destination
-        print date
-        print ride_time
+        # print source
+        # print destination
+        # print date
+        # print ride_time
         R = 6373.0
         lt1=request.form['lat1']
         ln1=request.form['long1']
         lt2=request.form['lat2']
         ln2=request.form['long2']
-        print lt1
-        print ln1
-        print lt2
-        print ln2
+        # print lt1
+        # print ln1
+        # print lt2
+        # print ln2
         lat1 = radians(float(lt1))
         lon1 = radians(float(ln1))
         lat2 = radians(float(lt2))
@@ -114,12 +114,12 @@ def findcab():
         cur.execute("select * from rides_offered" )
         result = cur.fetchall()
 
-        print result[0][8]
+        # print result[0][8]
         date=time.strptime(result[0][8],"%Y-%m-%d")
-        print date
+        # print date
 
-        for i in range(len(result)):
-            print result[i][0]
+        # for i in range(len(result)):
+        #     print result[i][0]
 
         # print("Here")
         # for data in result:
@@ -250,7 +250,7 @@ def register():
     return render_template('register.html', form=form)
 
 
-# User login 
+# User login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
