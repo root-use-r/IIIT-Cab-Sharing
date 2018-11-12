@@ -14,7 +14,7 @@
     {% extends 'layout.html' %}
 
     {% block body %}
-    <div class="container col-lg-10" style="height: 50%;width: 50%">
+    <div class="container split left" style="height: 50%;width: 50%">
             <div>
               <h3>Ride Details</h3>
                 <form method="POST">
@@ -41,6 +41,10 @@
 
                     <input type="radio" name="type" id="changemode-driving" checked="checked">
                     <label for="changemode-driving">Driving</label>
+                    <input id="lat1" name="lat1" class="controls form-control" type="text" placeholder="none">
+                  <input id="long1" name="long1" class="controls form-control" type="text" placeholder="none">
+                  <input id="lat2" name="lat2" class="controls form-control" type="text" placeholder="none">
+                  <input id="long2" name="long2" class="controls form-control" type="text" placeholder="none">
                   </div>
 
                   <div class ="well" >
@@ -71,16 +75,13 @@
               </div>
                   <button type="submit" class="btn btn-primary">Submit</button>
 
-                  <input id="lat1" name="lat1" class="controls form-control" type="text" placeholder="none">
-                  <input id="long1" name="long1" class="controls form-control" type="text" placeholder="none">
-                  <input id="lat2" name="lat2" class="controls form-control" type="text" placeholder="none">
-                  <input id="long2" name="long2" class="controls form-control" type="text" placeholder="none">
+                  
                 </form>
               </div>
 
 
     </div>
-    <div class=" container split right  " >
+    <div class=" container split right " >
       <h3>Ride Summary</h3>
     <div id="map" style="height: 50%; width:50%;"></div>
     </div>

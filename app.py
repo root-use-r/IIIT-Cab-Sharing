@@ -52,7 +52,7 @@ def rides():
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
     result = []
-    username = "munjal"
+    username = session['username']
     cur.execute("select * from rides_offered where username = ?",[username])
     result = cur.fetchall()
     return render_template('rides.html' , result = result)
@@ -97,9 +97,10 @@ def offer():
         form['lat2'] = request.form['lat2']
         form['long2'] = request.form['long2']
         form['valid'] = 0
+        username=session['username']
         with sqlite3.connect("CabSharing.db") as con:
             cur = con.cursor()
-            cur.execute("INSERT INTO rides_offered(userName, source, destination, lat1, long1, lat2, long2, offeredDate, offeredTime, offeredPrice, offeredSeats, details, valid) VALUES(? , ? , ? , ? , ? , ? , ? , ? , ? , ? ,? , ? , ? )" , ("munjal" , form['source'], form['destination'], form['lat1'], form['long1'], form['lat2'], form['long2'], form['date'], form['time'], form['price'], form['numberOfSeats'], form['details'], form['valid'], ))
+            cur.execute("INSERT INTO rides_offered(userName, source, destination, lat1, long1, lat2, long2, offeredDate, offeredTime, offeredPrice, offeredSeats, details, valid) VALUES(? , ? , ? , ? , ? , ? , ? , ? , ? , ? ,? , ? , ? )" , (username , form['source'], form['destination'], form['lat1'], form['long1'], form['lat2'], form['long2'], form['date'], form['time'], form['price'], form['numberOfSeats'], form['details'], form['valid'], ))
             con.commit()
 
         flash('Your Post has been put live ', 'success')
