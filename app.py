@@ -12,13 +12,12 @@ app = Flask(__name__)
 def index():
     return render_template('home.html')
 
+
+
 @app.route('/signin')
 def signin():
     return render_template('Googlesignin.html')
 
-@app.route('/findcab')
-def findcab():
-    return render_template('find.html')
 
 # @app.route('/offercab')
 # def offercab():
@@ -28,9 +27,35 @@ def findcab():
 def tdashboard():
     return render_template('tdashboard.html')
 
+@app.route('/findcab' , methods=['GET', 'POST'])
+def findcab():
+    if request.method == 'POST':
+        print("here")
+        source = request.form['source']
+        destination = request.form['destination']
+        # date = request.form['date']
+        # time = request.form['time']
+
+        con = sqlite3.connect("CabSharing.db")
+        cur = con.cursor()
+        result = []
+        cur.execute("select * from rides_offered where source = ? and destination = ?" ,(source, destination,) )
+        result = cur.fetchall()
+        print("Here")
+        for data in result:
+            print(data)
+        return render_template('findresults.html' , result = result)
+    return render_template('find.html')
+
 @app.route('/rides')
 def rides():
-    return render_template('rides.html')
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    result = []
+    username = "munjal"
+    cur.execute("select * from rides_offered where username = ?",[username])
+    result = cur.fetchall()
+    return render_template('rides.html' , result = result)
 
 @app.route('/bookings')
 def bookings():
@@ -54,15 +79,30 @@ def contactus():
 #     offeredSeats = StringField('Offered Seats')
 #     offeredPrice = StringField('Offered Price')
 
-@app.route('/offer', methods=['GET', 'POST'])
+@app.route('/offercab', methods=['GET', 'POST'])
 def offer():
     if request.method == 'POST':
         # Get Form Fields
-        source = request.form['source']
-        destination = request.form['destination']
-        print()
-        print(source)
-        print(destination)
+        form = {}
+        form['details']= ""
+        form['source'] = request.form['source']
+        form['destination'] = request.form['destination']
+        form['date'] = request.form['date']
+        form['time'] = request.form['time']
+        form['price'] = request.form['price']
+        form['numberOfSeats'] = request.form['seats']
+        # details = request.form['details']
+        form['lat1'] = request.form['lat1']
+        form['long1'] = request.form['long1']
+        form['lat2'] = request.form['lat2']
+        form['long2'] = request.form['long2']
+        form['valid'] = 0
+        with sqlite3.connect("CabSharing.db") as con:
+            cur = con.cursor()
+            cur.execute("INSERT INTO rides_offered(userName, source, destination, lat1, long1, lat2, long2, offeredDate, offeredTime, offeredPrice, offeredSeats, details, valid) VALUES(? , ? , ? , ? , ? , ? , ? , ? , ? , ? ,? , ? , ? )" , ("munjal" , form['source'], form['destination'], form['lat1'], form['long1'], form['lat2'], form['long2'], form['date'], form['time'], form['price'], form['numberOfSeats'], form['details'], form['valid'], ))
+            con.commit()
+
+        flash('Your Post has been put live ', 'success')
 
 
     # form = OfferedSeat(request.form)
@@ -84,7 +124,7 @@ def offer():
     #
     #     flash('Your Post has been put live ', 'success')
     #
-    #     return redirect(url_for('home'))
+        return render_template('rides.html' )
     return render_template('offer_map.html')
 
 

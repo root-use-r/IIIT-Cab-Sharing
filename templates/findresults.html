@@ -1,0 +1,21 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<h2 class="text-center"><strong>Found Rides</strong><br><br></h2>
+
+<div id="result-date"></div>
+<div class="text-center" id="results">
+</div>
+<script>
+
+  $('#results').html('<a href="" class="row"><div class="col-sm-12"><div class="panel panel-default text-left"><div class="panel-body"><strong class="lead">' +
+    '<p class="text-right"><i class="fa fa-rupee" style="font-size:36px"></i> {{result[0][10]}}</p> {{result[0][2]}}' +
+    '<br><span class="glyphicon glyphicon-triangle-bottom text-right"></span><br>' +
+    '{{result[0][3]}} ' +
+        '<br><br></div>'+ '<div class="container text-left lead" >' +
+        '<span class="glyphicon glyphicon-user"></span> {{result[0][1]}} <span class="glyphicon glyphicon-flash text-right"></span></br></div></div></div></a>');
+
+
+</script>
+{% endblock %}

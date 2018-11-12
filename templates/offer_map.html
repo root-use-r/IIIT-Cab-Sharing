@@ -53,18 +53,19 @@
                       <input type="time" name="time" class="form-control">
                       </div>
                   </div>
+
                   <div class="form-group">
                   <label for="price">Price per co-traveller</label>
                   <input type="number" name="price" class="form-control">
                   </div>
                   <div class="form-group">
                   <label for="seats">Number of seats</label>
-                  <input type="number" name="seats" class="form-control" min="1" max="5">
+                  <input type="numberOfSeats" name="seats" class="form-control" min="1" max="5">
                   </div>
                   <div class="form-group">
-                  <label for="rdetails">Ride Details</label>
+                  <label for="details">Ride Details</label>
                   <br>
-                  <textarea rows="4" cols="100" name="details" class="form-control" form="usrform">Anything to add about your ride...</textarea>
+                  <textarea rows="4" cols="100" name="details" class="form-control" form="usrform" placeholder="Anything to add about your ride..."></textarea>
                   <br>
 
               </div>
@@ -79,7 +80,7 @@
 
 
     </div>
-    <div class=" container split right col-lg-10" >
+    <div class=" container split right  " >
       <h3>Ride Summary</h3>
     <div id="map" style="height: 50%; width:50%;"></div>
     </div>
@@ -179,7 +180,7 @@
             document.getElementById("lat1").value=lat1;
             document.getElementById("long1").value=lon1;
 
-          } 
+          }
 
 
 
@@ -198,7 +199,7 @@
             document.getElementById("lat2").value=lat2;
             document.getElementById("long2").value=lon2;
 
-          } 
+          }
           else {
           alert("Geocode was not successful for the following reason: " + status);
           }

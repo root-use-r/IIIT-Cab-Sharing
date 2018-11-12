@@ -27,27 +27,17 @@
 
       <div class="tab-content">
 
-        <div id="upcoming-rides" class="tab-pane fade in active text-left">
+        <div  class="tab-pane fade in active text-left">
           <br>
-          <p>You don't have any upcoming rides yet</p>
+          <div id="upcoming-ride-data">
+          <p >You don't have any upcoming rides yet</p>
             <!-- <form method="get" action="/offer_map.html"> -->
               <button type="button" class="btn-success" onclick="window.location.href='/offercab'">Offer a ride</button>
             <!-- </form> -->
-          <br><br>
-          <div class="row">
-            <div class="col-sm-8">
-              <div class="panel panel-default text-left">
-                <div class="panel-body">
-                  <span class="glyphicon glyphicon-road"></span>
-                  <strong class="lead"> Rides <span class="badge" >0</span></strong>
-                </div>
-                <div class="well-lg">
-                  <p >Upcoming rides will come here</p>
-                </div>
-              </div>
-            </div>
           </div>
-        </div>
+
+          <br><br>
+        <div>
 
         <div id="past-rides" class="tab-pane fade text-left">
           <br>
@@ -68,5 +58,20 @@
 
 </div>
 
+<script>
+
+  $('#upcoming-ride-data').html('<div class="row"><div class="col-sm-12"><div class="panel panel-default text-left"><div class="panel-body"><strong class="lead">' +
+    ' {{result[0][2]}} -> ' + '{{result[0][3]}} ' +
+      '</strong></div><div class="well-lg"><p>' +
+        '<p><span class="glyphicon glyphicon-calendar"></span> {{result[0][8]}} ' + '{{result[0][9]}}</p>' +
+        '<p><span class="glyphicon glyphicon-stats"></span> No Views Yet</br></br></p>' +
+       '</p></div>'+ '<div class="container-fluid" >' +
+        '<a href="" class="col-sm-5" ><span class="glyphicon glyphicon-duplicate"></span> Duplicate </a>' +
+        '<a href="" class="col-sm-2" ><span class="glyphicon glyphicon-user"></span> See co-travellers </a>' +
+         '<a href="" class="col-sm-2" ><span class="glyphicon glyphicon-eye-open"></span> See ride-offer </a>' +
+         '<a href="" class="col-sm-1" ><span class="glyphicon glyphicon-pencil"></span> Edit </a>' +
+        ' <a href="" class="col-sm-1" ><span class="glyphicon glyphicon-trash"></span> Delete </a></br></br></div></div></div></div>');
+
+</script>
 
 {% endblock %}
