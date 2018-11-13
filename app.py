@@ -5,9 +5,31 @@ from math import sin, cos, sqrt, atan2, radians
 import time
 from passlib.hash import sha256_crypt
 import sqlite3
+from flask_mail import Mail
+from flask_mail import Message
+import random
 
 app = Flask(__name__)
+mail = Mail(app)
 
+app.config['MAIL_SERVER']='smtp.gmail.com'
+app.config['MAIL_PORT'] = 465
+app.config['MAIL_USERNAME'] = 'sankettheflash@gmail.com'
+app.config['MAIL_PASSWORD'] = 'Sanky@711'
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True
+mail = Mail(app)
+
+
+
+@app.route("/sendmail")
+def sendmail():
+   otp=random.randrange(1000, 9999, 1)
+   subject='Your sharcab OTP is'+ str(otp)
+   msg = Message(subject, sender = 'sankettheflash@gmail.com', recipients = ['shubham.pahuja1996@gmail.com'])
+   msg.body = subject
+   mail.send(msg)
+   return "Sent"
 
 @app.route('/')
 def index():
@@ -358,6 +380,24 @@ class RegisterForm(Form):
     ])
     confirm = PasswordField('Confirm Password')
 
+@app.route('/verify', methods=['GET', 'POST'])
+def verify():
+    # otp=random.randrange(1000, 9999, 1)
+    otp=1111
+    subject='Your sharcab OTP is'+ str(otp)
+    msg = Message(subject, sender = 'sankettheflash@gmail.com', recipients = ['shubham.pahuja1996@gmail.com'])
+    msg.body = subject
+    mail.send(msg)
+    print otp
+    if request.method == 'POST':
+        eotp = request.form['eotp']
+        print eotp
+        if int(eotp)==otp:
+            flash('You are now registered and can log in', 'success')
+            return redirect(url_for('login'))
+        else:
+            flash('Invalid OTP', 'danger')
+    return render_template('verify.html')
 
 
 # User Register
@@ -379,7 +419,7 @@ def register():
             cur.execute("INSERT INTO users(name, email, username, password,phone,address) VALUES(?,?,?,?,?,?)", (name, email, username, password,contact,address))
 
             con.commit()
-
+        return redirect(url_for('verify'))
         flash('You are now registered and can log in', 'success')
 
         return redirect(url_for('login'))
