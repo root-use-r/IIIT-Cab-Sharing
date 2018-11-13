@@ -26,9 +26,41 @@
 
               <div class="tab-content">
                 <div id="current-bookings" class="tab-pane fade in active text-left">
-                  <br>
-                  <p>Here you can find your current bookings</p>
-                  <br><br>
+                  {% if count > 0 %}
+
+              {% for i in range(count) %}
+
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="panel panel-default text-left">
+                    <div class="panel-body"><strong class="lead"> {{result[i][2]}} -> {{result[i][3]}} </strong>
+                    </div>
+                  <div class="well-lg">
+                    <p>
+                    <p><span class="glyphicon glyphicon-calendar"></span> {{result[i][8]}}{{result[i][9]}}</p>
+                    <p><span class="glyphicon glyphicon-stats"></span> No Views Yet<br><br></p>
+                   </p>
+                 </div>
+                 <div class="container-fluid" >
+                    <a href="" class="col-sm-5" ><span class="glyphicon glyphicon-duplicate"></span> Duplicate </a>
+                    <a href="" class="col-sm-2" ><span class="glyphicon glyphicon-user"></span> See co-travellers </a>
+                    <a href="rides_found/{{result[i][0]}}/{{result[i][1]}}" class="col-sm-2" >
+                      <span class="glyphicon glyphicon-eye-open"></span> See ride-offer </a>
+                    <a href="" class="col-sm-1" ><span class="glyphicon glyphicon-pencil"></span> Edit </a>
+                    <a href="" class="col-sm-1" ><span class="glyphicon glyphicon-trash"></span> Delete </a>
+                    <br><br>
+                 </div>
+                  </div>
+                </div>
+              </div>
+
+              {% endfor %}
+            {% endif %}
+
+            {% if count==0 %}
+  			    <p >You don't have any upcoming rides yet</p>
+			      <button type="button" class="btn-success" onclick="window.location.href='/offercab'">Offer a ride</button>
+            {% endif %}
                 </div>
 
                 <div id="bookings-history" class="tab-pane fade text-left">

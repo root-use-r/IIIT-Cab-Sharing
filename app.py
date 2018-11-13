@@ -18,6 +18,113 @@ def index():
 def signin():
     return render_template('Googlesignin.html')
 
+# Check if user logged in
+def is_logged_in(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash('Unauthorized, Please login', 'danger')
+            return redirect(url_for('login'))
+    return wrap
+
+@app.route('/rides_accept/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
+def ride_accept(rideId,userName):
+    reason='Your ride is confirmed.'
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    cur.execute("update rides_requested set accepted=1 where rideId = ? and username = ?" , ( rideId , userName )) 
+
+    cur.execute("INSERT INTO notification(rideId , username , detail ) VALUES( ? , ? , ? ) ", (rideId, userName , reason) )
+    con.commit()
+    cur.execute("select * from rides_offered where rideId = ?", [rideId])
+    ride_data=cur.fetchone()
+    print ride_data
+    print ride_data[14]
+    seats_left=ride_data[14] - 1
+    cur.execute("update rides_offered set seatsleft=? where rideId = ? " , (seats_left , rideId )) 
+    if seats_left==0:
+        reason='Your ride is cancelled because car is full.'
+        cur.execute("update rides_requested set accepted=3 where rideId = ? and accepted=0" , [rideId]) 
+        cur.execute("select * from rides_requested where accepted=3 and rideId= ?", [rideId])
+        ridecancelled=cur.fetchall()
+        for i in range(len(ridecancelled)):
+            cur.execute("INSERT INTO notification(rideId , username , detail ) VALUES( ? , ? , ? ) ", (rideId, ridecancelled[i][1] , reason) )
+   
+    con.commit()
+    cur.close()
+
+
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    result = cur.execute("SELECT * FROM rides_offered WHERE rideId = ?", [rideId])
+    rides = cur.fetchone()
+    result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [session['username']])
+    user = cur.fetchone()
+
+    cur.execute("select * from rides_requested where rideId = ? and username = ? " , ( rideId , session['username'] ) )
+    taken_result = cur.fetchone()
+
+    cur.execute("select * from rides_requested where rideId = ? and accepted = 0" , [rideId] )
+    ride_request=cur.fetchall()
+
+    user_who_requested=[]
+    for i in range(len(ride_request)):
+        cur.execute("SELECT * FROM USERS WHERE userName = ?", [ride_request[i][1]])
+        temp_user=cur.fetchone()
+        user_who_requested.append(temp_user)
+
+    
+    # cur.execute("select * from rides_requested where rideId = ? and accepted = 1" , [rideId] )
+    # ride_accepted=cur.fetchall()
+
+    if taken_result :
+        return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=1, user=user ,user_who_requested=user_who_requested )
+    
+    return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=0, user=user ,user_who_requested=user_who_requested, users_length=len(user_who_requested) )
+
+
+
+@app.route('/rides_reject/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
+def ride_reject(rideId,userName):
+    reason='Your ride is rejected.'
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    cur.execute("update rides_requested set accepted=2 where rideId = ? and username = ?" , ( rideId , userName )) 
+    cur.execute("INSERT INTO notification(rideId , username , detail ) VALUES( ? , ? , ? ) ", (rideId, userName , reason) )
+    con.commit()
+    cur.close()
+
+
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    result = cur.execute("SELECT * FROM rides_offered WHERE rideId = ?", [rideId])
+    rides = cur.fetchone()
+    result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [session['username']])
+    user = cur.fetchone()
+
+    cur.execute("select * from rides_requested where rideId = ? and username = ? " , ( rideId , session['username'] ) )
+    taken_result = cur.fetchone()
+
+    cur.execute("select * from rides_requested where rideId = ? and accepted = 0" , [rideId] )
+    ride_request=cur.fetchall()
+
+    user_who_requested=[]
+    for i in range(len(ride_request)):
+        cur.execute("SELECT * FROM USERS WHERE userName = ?", [ride_request[i][1]])
+        temp_user=cur.fetchone()
+        user_who_requested.append(temp_user)
+
+    
+    print(user_who_requested)
+
+    if taken_result :
+        return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=1, user=user ,user_who_requested=user_who_requested )
+    
+    return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=0, user=user ,user_who_requested=user_who_requested, users_length=len(user_who_requested) )
+
+
 
 
 @app.route('/rides_found/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
@@ -32,12 +139,22 @@ def ride(rideId,userName):
     cur.execute("select * from rides_requested where rideId = ? and username = ? " , ( rideId , session['username'] ) )
     taken_result = cur.fetchone()
 
-    print(taken_result)
+    cur.execute("select * from rides_requested where rideId = ? and accepted = 0" , [rideId] )
+    ride_request=cur.fetchall()
+
+    user_who_requested=[]
+    for i in range(len(ride_request)):
+        cur.execute("SELECT * FROM USERS WHERE userName = ?", [ride_request[i][1]])
+        temp_user=cur.fetchone()
+        user_who_requested.append(temp_user)
+
+    
+    print(user_who_requested)
 
     if taken_result :
-        return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=1, user=user  )
+        return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=1, user=user ,user_who_requested=user_who_requested )
     
-    return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=0, user=user  )
+    return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=0, user=user ,user_who_requested=user_who_requested, users_length=len(user_who_requested) )
 
 
 @app.route('/rides_request/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
@@ -54,6 +171,8 @@ def rides_request(rideId,userName):
     user = cur.fetchone()
     con.commit()
 
+    
+
     return render_template( 'ride.html', rides=rides , myUserName = session['username'] , flag =1  , user=user  )
 
 
@@ -65,6 +184,7 @@ def tdashboard():
     return render_template('tdashboard.html')
 
 @app.route('/findcab' , methods=['GET', 'POST'])
+@is_logged_in
 def findcab():
     if request.method == 'POST':
         print("here")
@@ -117,7 +237,7 @@ def findcab():
             distance2 = R * c
             temp_date=time.strptime(result[i][8],"%Y-%m-%d")
 
-            if(distance1<5 and distance2<5 and temp_date>=date and result[i][13]==0):
+            if(distance1<5 and distance2<5 and temp_date>=date and result[i][13]==1):
                 data_to_display.append(result[i])
                 # user.append(result[i][])
                 result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [result[i][1]] )
@@ -161,7 +281,20 @@ def past_rides():
 
 @app.route('/bookings')
 def bookings():
-    return render_template('bookings.html')
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    user_bookings=[]
+    username = session['username']
+    cur.execute("select * from rides_requested where username = ? and accepted = 1",[username])
+    result = cur.fetchall()
+    for i in range(len(result)):
+        cur.execute("select * from rides_offered where rideId = ? and valid = 1",[result[i][0]] )
+        temp=cur.fetchone()
+        if temp:
+            user_bookings.append(temp)
+    cur.close()
+
+    return render_template('bookings.html',result = user_bookings,count=len(user_bookings))
 
 @app.route('/messages')
 def messages():
@@ -176,6 +309,7 @@ def contactus():
 
 
 @app.route('/offercab', methods=['GET', 'POST'])
+@is_logged_in
 def offer():
     if request.method == 'POST':
         form = {}
@@ -194,7 +328,7 @@ def offer():
         username=session['username']
         with sqlite3.connect("CabSharing.db") as con:
             cur = con.cursor()
-            cur.execute("INSERT INTO rides_offered(userName, source, destination, lat1, long1, lat2, long2, offeredDate, offeredTime, offeredPrice, offeredSeats, details, valid) VALUES(? , ? , ? , ? , ? , ? , ? , ? , ? , ? ,? , ? , ? )" , (username , form['source'], form['destination'], form['lat1'], form['long1'], form['lat2'], form['long2'], form['date'], form['time'], form['price'], form['numberOfSeats'], form['details'], form['valid'], ))
+            cur.execute("INSERT INTO rides_offered(userName, source, destination, lat1, long1, lat2, long2, offeredDate, offeredTime, offeredPrice, offeredSeats, details, valid,seatsleft) VALUES(? , ? , ? , ? , ? , ? , ? , ? , ? , ? ,? , ? , ? ,?)" , (username , form['source'], form['destination'], form['lat1'], form['long1'], form['lat2'], form['long2'], form['date'], form['time'], form['price'], form['numberOfSeats'], form['details'], form['valid'], form['numberOfSeats'] , ))
             con.commit()
 
         flash('Your Post has been put live ', 'success')

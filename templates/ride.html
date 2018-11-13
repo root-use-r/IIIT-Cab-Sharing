@@ -217,6 +217,16 @@
 
 
 </div>
+{% if myUserName == rides[1] %}
+{% for i in range(users_length) %}
+<li>{{ user_who_requested[i][2]}}</li>
+<a  class="btn btn-default btn-info " href="/rides_accept/{{rides[0]}}/{{user_who_requested[i][0]}}" >
+  Accept </a>
+<a  class="btn btn-danger btn-info " href="/rides_reject/{{rides[0]}}/{{user_who_requested[i][0]}}" >
+  Reject </a>
+{% endfor %}
+{% endif %}
+
 
 {% endblock %}
 
