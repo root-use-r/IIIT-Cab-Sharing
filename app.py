@@ -194,10 +194,26 @@ def rides():
     cur = con.cursor()
     result = []
     username = session['username']
-    cur.execute("select * from rides_offered where username = ?",[username])
+    cur.execute("select * from rides_offered where username = ? and valid = 1",[username])
     result = cur.fetchall()
     count = len(result)
+    con.commit()
     return render_template('rides.html' , result = result , count = count)
+
+@app.route('/past_rides')
+def past_rides():
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    result = []
+    username = session['username']
+    cur.execute("select * from rides_offered where username = ? and valid = ?",(username , 0) )
+    result = cur.fetchall()
+    count = len(result)
+    print()
+    print(result)
+    print(count)
+    con.commit()
+    return render_template('past_rides.html' , result = result , count = count)
 
 @app.route('/bookings')
 def bookings():
@@ -238,7 +254,7 @@ def offer():
         form['long1'] = request.form['long1']
         form['lat2'] = request.form['lat2']
         form['long2'] = request.form['long2']
-        form['valid'] = 0
+        form['valid'] = 1
         username=session['username']
         with sqlite3.connect("CabSharing.db") as con:
             cur = con.cursor()

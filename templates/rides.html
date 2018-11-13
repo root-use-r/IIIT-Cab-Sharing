@@ -20,15 +20,15 @@
 
     <div  class="tab-pane fade in active">
       <ul class="nav nav-pills">
-        <li class="active"><a data-toggle="pill" href="#upcoming-rides">Upcoming Rides</a></li>
-        <li><a data-toggle="pill" href="#past-rides">Past Rides</a></li>
-        <li><a data-toggle="pill" href="#archived-rides">Archived Rides</a></li>
+        <li class="active"><a  href="rides">Upcoming Rides</a></li>
+        <li><a  href="past_rides">Past Rides</a></li>
+        <li><a  href="#archived-rides">Archived Rides</a></li>
       </ul>
 
-		<div class="tab-content">
 
-			<div  id="upcoming-rides" class="tab-pane fade in active text-left">
-			      <br>
+			<div  id="upcoming-rides" class="active text-left">
+			      <br><br>
+
 			    <div id="upcoming-ride-data">
 
             {% if count > 0 %}
@@ -72,16 +72,6 @@
 
 		    <br><br>
 
-		    <div id="past-rides" class="tab-pane fade text-left">
-		      <br>
-		      <p>No past rides yet</p>
-
-		    </div>
-
-		    <div id="archived-rides" class="tab-pane fade text-left">
-		      <br>
-		      <p>No archived rides yet</p>
-		    </div>
 
 <!-- 			<div>
 			<span class="left-text"></span>

@@ -1,0 +1,84 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+
+<div class=" container ">
+
+      <ul class="nav nav-tabs">
+        <li ><a href="dashboard">Dashboard</a></li>
+        <li class= "active"><a href="rides">Rides Offered</a></li>
+        <li ><a href="bookings">Bookings</a></li>
+        <li ><a href="messages">Messages</a></li>
+        <li ><a href="#">Ride Alerts</a></li>
+        <li ><a href="#">Profile</a></li>
+      </ul>
+      <br>
+
+</div><div class="container text-center">
+
+    <div  class="tab-pane fade in active">
+      <ul class="nav nav-pills">
+        <li><a  href="rides">Upcoming Rides</a></li>
+        <li class="active"><a href="past_rides">Past Rides</a></li>
+        <li><a  href="#archived-rides">Archived Rides</a></li>
+      </ul>
+
+		<div class="tab-content">
+
+		    <br><br>
+
+		    <div id="past-rides" class=" text-left">
+
+				  {% if count > 0 %}
+
+	              {% for i in range(count) %}
+
+	              <div class="row">
+	                <div class="col-sm-12">
+	                  <div class="panel panel-default text-left">
+	                    <div class="panel-body"><strong class="lead"> {{result[i][2]}} -> {{result[i][3]}} </strong>
+	                    </div>
+	                  <div class="well-lg">
+	                    <p>
+	                    <p><span class="glyphicon glyphicon-calendar"></span> {{result[i][8]}}{{result[i][9]}}</p>
+	                    <p><span class="glyphicon glyphicon-stats"></span> No Views Yet<br><br></p>
+	                   </p>
+	                 </div>
+	                 <div class="container-fluid" >
+	                    <a href="" class="col-sm-5" ><span class="glyphicon glyphicon-duplicate"></span> Duplicate </a>
+	                    <a href="" class="col-sm-2" ><span class="glyphicon glyphicon-user"></span> See co-travellers </a>
+	                    <a href="rides_found/{{result[i][0]}}/{{result[i][1]}}" class="col-sm-2" >
+	                      <span class="glyphicon glyphicon-eye-open"></span> See ride-offer </a>
+	                    <a href="" class="col-sm-1" ><span class="glyphicon glyphicon-pencil"></span> Edit </a>
+	                    <a href="" class="col-sm-1" ><span class="glyphicon glyphicon-trash"></span> Delete </a>
+	                    <br><br>
+	                 </div>
+	                  </div>
+	                </div>
+	              </div>
+
+	              {% endfor %}
+	            {% endif %}
+
+	            {% if count==0 %}
+	  			    <p >You don't have any upcoming rides yet</p>
+				      <button type="button" class="btn-success" onclick="window.location.href='/offercab'">Offer a ride</button>
+	            {% endif %}
+			</div>
+   			
+
+
+		    </div>
+
+<!-- 			<div>
+			<span class="left-text"></span>
+			</div> -->
+		</div>
+	</div>
+</div>
+
+
+
+
+{% endblock %}
+
