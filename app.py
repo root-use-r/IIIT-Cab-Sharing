@@ -3,43 +3,29 @@ from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from functools import wraps
 from math import sin, cos, sqrt, atan2, radians
 import time
+from passlib.hash import sha256_crypt
 import sqlite3
 
 app = Flask(__name__)
 
 
-
-# Index
 @app.route('/')
 def index():
     return render_template('home.html')
 
 
-# by shubham
 @app.route('/signin')
 def signin():
     return render_template('Googlesignin.html')
 
 
 
-# @app.route('/rides_found/<string:userName>/', methods=['GET', 'POST'])
-# def ride(userName):
-#     con = sqlite3.connect("CabSharing.db")
-#     cur = con.cursor()
-#     result = cur.execute("SELECT * FROM rides_offered WHERE userName = ?", [userName])
-#     rides = cur.fetchone()
-#     # print (rides)
-#     result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [userName])
-#     user = cur.fetchone()
-#     return render_template( 'ride.html', rides=rides,user=user )
-# by shubham
 @app.route('/rides_found/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
 def ride(rideId,userName):
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
     result = cur.execute("SELECT * FROM rides_offered WHERE rideId = ?", [rideId])
     rides = cur.fetchone()
-    # print (rides)
     result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [userName])
     user = cur.fetchone()
 
@@ -58,64 +44,21 @@ def ride(rideId,userName):
 def rides_request(rideId,userName):
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
-
     cur.execute("SELECT * FROM rides_offered WHERE rideId = ?", [rideId])
     rides = cur.fetchone()
-
-    print(rides)
-
     accepted = 0
-    print(rideId)
-    print(userName)
-    print(accepted)
 
     cur.execute("INSERT INTO rides_requested(rideId , username , accepted ) VALUES( ? , ? , ? ) ", (rideId, userName,accepted) )
 
     cur.execute("SELECT * FROM USERS WHERE userName = ?", [userName])
     user = cur.fetchone()
-    print(user)
     con.commit()
 
     return render_template( 'ride.html', rides=rides , myUserName = session['username'] , flag =1  , user=user  )
 
 
 
-# by shubham
 
-# @app.route('/rides_found')
-# def foundrides():
-#     # Create cursor
-#     name=[]
-#     con = sqlite3.connect("CabSharing.db")
-#     cur = con.cursor()
-
-#     # Get rides
-#     # Show rides only from the user logged in
-#     result = cur.execute("SELECT * FROM rides_offered  " )
-
-#     rides = cur.fetchall()
-#     total_rides = len(rides)
-#     # print
-#     # print rides
-#     for i in range(total_rides):
-#         result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [rides[i][1]] )
-#         user = cur.fetchone()
-#         # print user[0][2]
-#         name.append(user[2])
-#     # if result > 0:
-#     return render_template('dashboard.html', rides=rides, total_rides=total_rides,name=name)
-#     # else:
-#     #     msg = 'No Articles Found'
-#     #     return render_template('dashboard.html', msg=msg)
-#     # Close connection
-#     cur.close()
-
-# by shubham
-
-
-# @app.route('/offercab')
-# def offercab():
-#     return render_template('offer_map.html')
 
 @app.route('/dashboard')
 def tdashboard():
@@ -172,8 +115,9 @@ def findcab():
             c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
             distance2 = R * c
+            temp_date=time.strptime(result[i][8],"%Y-%m-%d")
 
-            if(distance1<5 and distance2<5):
+            if(distance1<5 and distance2<5 and temp_date>=date and result[i][13]==0):
                 data_to_display.append(result[i])
                 # user.append(result[i][])
                 result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [result[i][1]] )
@@ -213,18 +157,11 @@ def contactus():
     return render_template('about.html')
 
 
-# class OfferedSeat(Form):
-#     source = StringField('Source')
-#     destination = StringField('Destination')
-#     date = StringField('Date')
-#     time = StringField('Time ')
-#     offeredSeats = StringField('Offered Seats')
-#     offeredPrice = StringField('Offered Price')
+
 
 @app.route('/offercab', methods=['GET', 'POST'])
 def offer():
     if request.method == 'POST':
-        # Get Form Fields
         form = {}
         form['details']= ""
         form['source'] = request.form['source']
@@ -233,7 +170,6 @@ def offer():
         form['time'] = request.form['time']
         form['price'] = request.form['price']
         form['numberOfSeats'] = request.form['seats']
-        # details = request.form['details']
         form['lat1'] = request.form['lat1']
         form['long1'] = request.form['long1']
         form['lat2'] = request.form['lat2']
@@ -248,32 +184,14 @@ def offer():
         flash('Your Post has been put live ', 'success')
 
         with sqlite3.connect("CabSharing.db") as con:
-            cur = con.curson()
+            cur = con.cursor()
             cur.execute("select * from rides_offered where username = ?", [session['username']])
             result= cur.fetchall()
             count = len(result)
             return render_template('rides.html' , result = result , count = count)
             con.commit()
 
-    # form = OfferedSeat(request.form)
-    # if request.method == 'POST' and form.validate():
-    #     source = form.source.data
-    #     destination = form.destination.data
-    #     date = form.date.data
-    #     time = form.time.data
-    #     offeredPrice = form.offeredPrice.data
-    #     offeredPrice = int(offeredPrice)
-    #     offeredSeats = form.offeredSeats.data
-    #     offeredSeats = int(offeredSeats)
-    #
-    #     with sqlite3.connect("CabSharing.db") as con:
-    #         cur = con.cursor()
-    #         cur.execute("INSERT INTO rides_offered(userName , source, destination, offeredDate, offeredTime , offeredPrice , offeredSeats , valid) VALUES(? , ? , ? , ? , ? , ? , ? , ? )" , ("tarun" , source, destination, date, time, offeredPrice, offeredSeats , 0))
-    #
-    #         con.commit()
-    #
-    #     flash('Your Post has been put live ', 'success')
-    #
+
         return render_template('rides.html' , result)
     return render_template('offer_map.html')
 
@@ -300,8 +218,8 @@ def register():
         name = form.name.data
         email = form.email.data
         username = form.username.data
-        # password = sha256_crypt.encrypt(str(form.password.data))
-        password = form.password.data
+        password = sha256_crypt.encrypt(str(form.password.data))
+        # password = form.password.data
         contact = form.contact.data
         address = form.address.data
 
@@ -363,8 +281,8 @@ def login():
                 print("here")
                 print(password)
                 # Compare Passwords
-                # if sha256_crypt.verify(password_candidate, password):
-                if (password_candidate == password):
+                if sha256_crypt.verify(password_candidate, password):
+                # if (password_candidate == password):
                     # Passed
                     session['logged_in'] = True
                     session['username'] = username
