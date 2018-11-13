@@ -15,13 +15,13 @@ def index():
     return render_template('home.html')
 
 
-
+# by shubham
 @app.route('/signin')
 def signin():
     return render_template('Googlesignin.html')
 
 
-# by shubham
+
 @app.route('/rides_found/<string:userName>/', methods=['GET', 'POST'])
 def ride(userName):
     con = sqlite3.connect("CabSharing.db")
@@ -34,33 +34,33 @@ def ride(userName):
     return render_template( 'ride.html', rides=rides,user=user )
 
 
-@app.route('/rides_found')
-def foundrides():
-    # Create cursor
-    name=[]
-    con = sqlite3.connect("CabSharing.db")
-    cur = con.cursor()
+# @app.route('/rides_found')
+# def foundrides():
+#     # Create cursor
+#     name=[]
+#     con = sqlite3.connect("CabSharing.db")
+#     cur = con.cursor()
 
-    # Get rides
-    # Show rides only from the user logged in
-    result = cur.execute("SELECT * FROM rides_offered  " )
+#     # Get rides
+#     # Show rides only from the user logged in
+#     result = cur.execute("SELECT * FROM rides_offered  " )
 
-    rides = cur.fetchall()
-    total_rides = len(rides)
-    # print
-    # print rides
-    for i in range(total_rides):
-        result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [rides[i][1]] )
-        user = cur.fetchone()
-        # print user[0][2]
-        name.append(user[2])
-    # if result > 0:
-    return render_template('dashboard.html', rides=rides, total_rides=total_rides,name=name)
-    # else:
-    #     msg = 'No Articles Found'
-    #     return render_template('dashboard.html', msg=msg)
-    # Close connection
-    cur.close()
+#     rides = cur.fetchall()
+#     total_rides = len(rides)
+#     # print
+#     # print rides
+#     for i in range(total_rides):
+#         result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [rides[i][1]] )
+#         user = cur.fetchone()
+#         # print user[0][2]
+#         name.append(user[2])
+#     # if result > 0:
+#     return render_template('dashboard.html', rides=rides, total_rides=total_rides,name=name)
+#     # else:
+#     #     msg = 'No Articles Found'
+#     #     return render_template('dashboard.html', msg=msg)
+#     # Close connection
+#     cur.close()
 
 # by shubham
 
@@ -142,7 +142,7 @@ def findcab():
         # for data in result:
         #     print(data)
         # return render_template('findresults.html' , result = result)
-        return render_template('dashboard.html',rides=data_to_display,total_rides=total_rides,name=name)
+        return render_template('rides_found.html',rides=data_to_display,total_rides=total_rides,name=name)
     return render_template('find.html')
 
 @app.route('/rides')
