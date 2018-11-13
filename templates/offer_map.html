@@ -1,21 +1,23 @@
-<!-- <h1>Login</h1>
-    <form action="" method="POST">
-    <div class="form-group">
-        <label>Username</label>
-        <input type="text" name="username" class="form-control" value={{request.form.username}}>
-    </div>
-    <div class="form-group">
-        <label>Password</label>
-        <input type="password" name="password" class="form-control" value={{request.form.password}}>
-    </div>
-    <button type="submit" class="btn btn-primary">Submit</button>
-    </form> -->
+<!DOCTYPE html>
+<html>
+  <head>
+      <title>Car Sharing</title>
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/design.css') }}">
+      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/main.css') }}">
+      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+      <meta name="google-signin-client_id" content="272416681581-52u3ck9rlbt1hogin5nfjvtpbk2ku92t.apps.googleusercontent.com">
+      <script src="https://apis.google.com/js/platform.js" async defer></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+      <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-{% extends 'layout.html' %}
-
-{% block body %}
-
-<div class="container split left" style="height: 50%;width: 50%">
+      <meta charset="utf-8">
+  </head>
+  <body>
+      {% include 'includes/_navbar.html' %}
+    <div class="container-fluid" style="height: 100%;width: 100%;">
+<div class="container split left" style="height: 50%;width: 50%;padding-left: 100px;">
   <div>
     <h3>Ride Details</h3>
     <form method="POST">
@@ -83,10 +85,15 @@
 
 </div>
 
-<div class=" container split right ">
+<div class=" container split right " style="height: 50%;width: 50%">
   <h3>Ride Summary</h3>
-  <div id="map" style="height: 50%; width:50%;"></div>
+  <div id="map" style="height: 100%; width:80%;"></div>
 </div>
+
+
+
+</div>
+
 
 <script>
   // This example requires the Places library. Include the libraries=places
@@ -227,4 +234,4 @@
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtw56_J9YjK6Kptzau4VLaQNSKL4hnjdw&libraries=places&callback=initMap"
   async defer></script>
-{% endblock %}
+</body>
