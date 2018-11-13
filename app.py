@@ -43,22 +43,22 @@ def foundrides():
 
     # Get rides
     # Show rides only from the user logged in
-    result = cur.execute("SELECT * FROM rides_offered")
+    result = cur.execute("SELECT * FROM rides_offered  " )
 
     rides = cur.fetchall()
     total_rides = len(rides)
-    print
+    # print
     # print rides
     for i in range(total_rides):
-        result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [rides[i][1]])
+        result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [rides[i][1]] )
         user = cur.fetchone()
         # print user[0][2]
         name.append(user[2])
-    if result > 0:
-        return render_template('dashboard.html', rides=rides, total_rides=total_rides,name=name)
-    else:
-        msg = 'No Articles Found'
-        return render_template('dashboard.html', msg=msg)
+    # if result > 0:
+    return render_template('dashboard.html', rides=rides, total_rides=total_rides,name=name)
+    # else:
+    #     msg = 'No Articles Found'
+    #     return render_template('dashboard.html', msg=msg)
     # Close connection
     cur.close()
 
