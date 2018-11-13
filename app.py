@@ -42,7 +42,44 @@ def ride(rideId,userName):
     # print (rides)
     result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [userName])
     user = cur.fetchone()
-    return render_template( 'ride.html', rides=rides,user=user )
+
+    cur.execute("select * from rides_requested where rideId = ? and username = ? " , ( rideId , session['username'] ) )
+    taken_result = cur.fetchone()
+
+    print(taken_result)
+
+    if taken_result :
+        return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=1, user=user  )
+    
+    return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=0, user=user  )
+
+
+@app.route('/rides_request/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
+def rides_request(rideId,userName):
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+
+    cur.execute("SELECT * FROM rides_offered WHERE rideId = ?", [rideId])
+    rides = cur.fetchone()
+
+    print(rides)
+
+    accepted = 0
+    print(rideId)
+    print(userName)
+    print(accepted)
+
+    cur.execute("INSERT INTO rides_requested(rideId , username , accepted ) VALUES( ? , ? , ? ) ", (rideId, userName,accepted) )
+
+    cur.execute("SELECT * FROM USERS WHERE userName = ?", [userName])
+    user = cur.fetchone()
+    print(user)
+    con.commit()
+
+    return render_template( 'ride.html', rides=rides , myUserName = session['username'] , flag =1  , user=user  )
+
+
+
 # by shubham
 
 # @app.route('/rides_found')
@@ -148,12 +185,7 @@ def findcab():
 
         total_rides= len(data_to_display)
 
-        # date=time.strptime(result[0][8],"%Y-%m-%d")
-        # print("Here")
-        # for data in result:
-        #     print(data)
-        # return render_template('findresults.html' , result = result)
-        return render_template('rides_found.html',rides=data_to_display,total_rides=total_rides,name=name)
+        return render_template('rides_found.html',rides=data_to_display,total_rides=total_rides,name=name )
     return render_template('find.html')
 
 @app.route('/rides')
@@ -165,7 +197,6 @@ def rides():
     cur.execute("select * from rides_offered where username = ?",[username])
     result = cur.fetchall()
     count = len(result)
-    print(count)
     return render_template('rides.html' , result = result , count = count)
 
 @app.route('/bookings')

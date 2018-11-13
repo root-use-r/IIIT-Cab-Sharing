@@ -55,7 +55,7 @@
         <div class="col-md-10 ">
           <div class="col-md-1"></div>
           <div class="col-md-8 ">
-              <button  class="btn-info"><i class="fa fa-address-card" ></i> Contact Owner</button>
+              <button  class="btn btn-default btn-info"><i class="fa fa-address-card" ></i> Contact Owner</button>
               <br><br>
           </div>
         </div>
@@ -133,6 +133,36 @@
               </p>
             </td>
           </tr>
+
+          {% if myUserName != rides[1] %}
+          <tr  class="text-center" id=request-seat>
+            <td colspan="2">  
+              <br>
+
+              <div class="dropdown text-center ">
+                <div><i class="material-icons" style="font-size:48px;color:#696969">person_add</i></div>
+                <select class="btn btn-default">
+                  <option class="btn-default" value="1">1 seat</option>
+                  <option class="btn-default" value="2">2 seats</option>
+                  <option class="btn-default" value="3">3 seats</option>
+                </select>
+                <br><br>
+              </div>
+
+              {% if flag == 0 %}
+                 <a  class="btn btn-default btn-info " href="/rides_request/{{  rides[0]}}/{{myUserName}}" >
+               Request To Book </a>
+              {% endif %}
+
+              {% if flag == 1 %}
+                 <a  class="btn btn-default btn-success" > Already Requested</a>
+              {% endif %}
+              <br>
+              <br>
+            </td>
+          </tr>
+          {% endif %}
+
       </table>
     
       </div>
