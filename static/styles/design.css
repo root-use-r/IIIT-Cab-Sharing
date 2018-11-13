@@ -52,7 +52,7 @@
   .split {
     height: 100%;
     width: 45%;
-    position: absolute;
+    position: fixed;
     /* z-index: 1;
     top: 0;
     overflow-x: hidden; */

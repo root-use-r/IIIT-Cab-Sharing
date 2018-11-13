@@ -80,52 +80,69 @@ def findcab():
         source = request.form['source']
         destination = request.form['destination']
         date = request.form['date']
+        date=time.strptime(date,"%Y-%m-%d")
         ride_time = request.form['time']
-        # print source
-        # print destination
-        # print date
-        # print ride_time
-        R = 6373.0
+        
         lt1=request.form['lat1']
         ln1=request.form['long1']
         lt2=request.form['lat2']
         ln2=request.form['long2']
-        # print lt1
-        # print ln1
-        # print lt2
-        # print ln2
+        
         lat1 = radians(float(lt1))
         lon1 = radians(float(ln1))
         lat2 = radians(float(lt2))
         lon2 = radians(float(ln2))
 
-        dlon = lon2 - lon1
-        dlat = lat2 - lat1
+    
 
-        a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
-        c = 2 * atan2(sqrt(a), sqrt(1 - a))
-
-        distance = R * c
-
-        print("Result:", distance)
         con = sqlite3.connect("CabSharing.db")
         cur = con.cursor()
         result = []
         cur.execute("select * from rides_offered" )
         result = cur.fetchall()
+        name=[]
+        data_to_display=[]
+        for i in range(len(result)):
+            tempsourcelat = radians(float(result[i][4]))
+            tempsourcelong = radians(float(result[i][5]))
+            tempdestinationlat = radians(float(result[i][6]))
+            tempdestinationlong = radians(float(result[i][7]))
+            
+            R = 6373.0
+            dlon = tempsourcelong - lon1
+            dlat = tempsourcelat - lat1
 
-        # print result[0][8]
-        date=time.strptime(result[0][8],"%Y-%m-%d")
-        # print date
+            a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+            c = 2 * atan2(sqrt(a), sqrt(1 - a))
 
-        # for i in range(len(result)):
-        #     print result[i][0]
+            distance1 = R * c
 
+            dlon = lon2 - tempdestinationlong
+            dlat = lat2 - tempdestinationlat
+
+            a = sin(dlat / 2)**2 + cos(lat1) * cos(lat2) * sin(dlon / 2)**2
+            c = 2 * atan2(sqrt(a), sqrt(1 - a))
+
+            distance2 = R * c
+
+            if(distance1<5 and distance2<5):
+                data_to_display.append(result[i])
+                # user.append(result[i][])
+                result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [result[i][1]] )
+                user = cur.fetchone()
+                # print user[0][2]
+                name.append(user[2])
+
+
+
+        total_rides= len(data_to_display)
+
+        # date=time.strptime(result[0][8],"%Y-%m-%d")
         # print("Here")
         # for data in result:
         #     print(data)
         # return render_template('findresults.html' , result = result)
-        return render_template('about.html')
+        return render_template('dashboard.html',rides=data_to_display,total_rides=total_rides,name=name)
     return render_template('find.html')
 
 @app.route('/rides')
