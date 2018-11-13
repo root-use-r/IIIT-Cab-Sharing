@@ -6,10 +6,10 @@
 
     <div class = "col-md-8 " >
       
-      <div class=" col-md-12 well well-lg">
+      <div class=" col-md-12 well well-lg " style=" background-color:white ">
         <div >
           
-          <div class="col-md-3">
+          <div class="col-md-3" style="color:#708090">
             <span>Departure Point</span>
           </div>
           
@@ -21,7 +21,7 @@
 
         <div >
         
-          <div class="col-md-3">
+          <div class="col-md-3" style="color:#708090">
             <span>Drop Off Point</span>
           </div>
           
@@ -33,7 +33,7 @@
 
         <div >
         
-          <div class="col-md-3">
+          <div class="col-md-3" style="color:#708090">
             <span>Departure date</span>
           </div>
           
@@ -43,27 +43,30 @@
 
         </div>
 
-        <div class="col-md-10">
-           <div class="col-md-1"><i class="fa fa-user " style="font-size: 44px"></i>
+        <div class="col-md-10 " style=" background-color:#F0F8FF ">
+           <div class="col-md-1 " style="color: #696969"><i class="fa fa-user " style="font-size: 44px"></i>
            </div>
            
            <div class="col-md-10">
-            <span class="lead">{{user[2]}}</span>
-            <p  id="details">The car owner hasn't mentioned any details</p>
+            <span class="lead" style="color: #696969">{{user[2]}}</span>
+            <p  id="details" style="color:#708090">The car owner hasn't mentioned any details</p>
            </div>
    
         <div class="col-md-10 ">
           <div class="col-md-1"></div>
           <div class="col-md-8 ">
-              <button  ><i class="fa fa-address-card" ></i> Contact Owner</button>
+              <button  class="btn-info"><i class="fa fa-address-card" ></i> Contact Owner</button>
+              <br><br>
           </div>
         </div>
+
         </div>
-   
       </div>
-          <table class="table table-bordered">
+
+          <table class="table table-bordered" >
+
         <thead>
-          <tr class="lead">
+          <tr class="lead" style="color: #696969">
             <th colspan="5">Itinerary and co-travellers</th>
           </tr>
         </thead>
@@ -71,27 +74,27 @@
         <tbody>
           <tr>
             <td class=" text-bottom"> </td>
-            <td><i class="fa fa-user " style="font-size: 36px"></i></td>
-            <td><i class="fa fa-automobile " style="font-size: 36px"></i></td>
-            <td><i class="fa fa-automobile " style="font-size: 36px"></i></td>
-            <td><i class="fa fa-automobile " style="font-size: 36px"></i></td>  
+            <td style="color: #696969"><i class="fa fa-user " style="font-size: 36px"></i></td>
+            <td style="color: #696969"><i class="fa fa-automobile " style="font-size: 36px"></i></td>
+            <td style="color: #696969"><i class="fa fa-automobile " style="font-size: 36px"></i></td>
+            <td style="color: #696969"><i class="fa fa-automobile " style="font-size: 36px"></i></td>  
           </tr>
           <tr>
-            <td><i class="fa fa-circle-o " style="font-size: 18px"></i> {{rides[2]}}</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
-          <tr>
-            <td><i class="fa fa-long-arrow-down" style="font-size:60px"></i></td>
+            <td style="color:#708090"><i class="fa fa-circle-o " style="font-size: 18px"></i> {{rides[2]}}</td>
             <td></td>
             <td></td>
             <td></td>
             <td></td>
           </tr>
           <tr>
-            <td><i class="fa fa-circle-o " style="font-size: 18px"></i> {{rides[3]}}</td>
+            <td style="color:#708090"><i class="fa fa-long-arrow-down" style="font-size:60px"></i></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+          </tr>
+          <tr>
+            <td style="color:#708090"><i class="fa fa-circle-o " style="font-size: 18px"></i> {{rides[3]}}</td>
             <td></td>
             <td></td>
             <td></td>
@@ -103,13 +106,13 @@
 
     </div>
 
-  <div>
+  <div style="color: #696969">
     <div class="col-md-4 ">
       
       <div>
         <table class="table-bordered">
           <tr>
-            <td class="col-md-6 text-center ">
+            <td class="col-md-6 text-center " >
               <p class="lead" style="font-size: 36px"><i class="fa fa-rupee "></i> {{rides[10]}}</p> 
               <p class="small">per Co-traveller</p>
             </td>

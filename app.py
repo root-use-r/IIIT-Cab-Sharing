@@ -153,7 +153,9 @@ def rides():
     username = session['username']
     cur.execute("select * from rides_offered where username = ?",[username])
     result = cur.fetchall()
-    return render_template('rides.html' , result = result)
+    count = len(result)
+    print(count)
+    return render_template('rides.html' , result = result , count = count)
 
 @app.route('/bookings')
 def bookings():
@@ -203,6 +205,13 @@ def offer():
 
         flash('Your Post has been put live ', 'success')
 
+        with sqlite3.connect("CabSharing.db") as con:
+            cur = con.curson()
+            cur.execute("select * from rides_offered where username = ?", [session['username']])
+            result= cur.fetchall()
+            count = len(result)
+            return render_template('rides.html' , result = result , count = count)
+            con.commit()
 
     # form = OfferedSeat(request.form)
     # if request.method == 'POST' and form.validate():
@@ -223,7 +232,7 @@ def offer():
     #
     #     flash('Your Post has been put live ', 'success')
     #
-        return render_template('rides.html' )
+        return render_template('rides.html' , result)
     return render_template('offer_map.html')
 
 
