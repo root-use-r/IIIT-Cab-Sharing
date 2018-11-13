@@ -22,17 +22,28 @@ def signin():
 
 
 
-@app.route('/rides_found/<string:userName>/', methods=['GET', 'POST'])
-def ride(userName):
+# @app.route('/rides_found/<string:userName>/', methods=['GET', 'POST'])
+# def ride(userName):
+#     con = sqlite3.connect("CabSharing.db")
+#     cur = con.cursor()
+#     result = cur.execute("SELECT * FROM rides_offered WHERE userName = ?", [userName])
+#     rides = cur.fetchone()
+#     # print (rides)
+#     result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [userName])
+#     user = cur.fetchone()
+#     return render_template( 'ride.html', rides=rides,user=user )
+# by shubham
+@app.route('/rides_found/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
+def ride(rideId,userName):
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
-    result = cur.execute("SELECT * FROM rides_offered WHERE userName = ?", [userName])
+    result = cur.execute("SELECT * FROM rides_offered WHERE rideId = ?", [rideId])
     rides = cur.fetchone()
     # print (rides)
     result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [userName])
     user = cur.fetchone()
     return render_template( 'ride.html', rides=rides,user=user )
-
+# by shubham
 
 # @app.route('/rides_found')
 # def foundrides():

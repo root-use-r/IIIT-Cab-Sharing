@@ -2,7 +2,7 @@
 
 {% block body %}
   {% for i in range(total_rides) %}
-  <a href="rides_found/{{rides[i][1]}}" class="row">
+  <a href="rides_found/{{rides[i][0]}}/{{rides[i][1]}}" class="row">
     <div class="col-sm-12">
       <div class="panel panel-default text-left">
         <div class="panel-body"><strong class="lead">
