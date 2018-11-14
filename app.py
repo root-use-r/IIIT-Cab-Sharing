@@ -504,7 +504,7 @@ def contactus():
 def offer():
     if request.method == 'POST':
         form = {}
-        form['details']= ""
+        form['details']= request.form['details']
         form['source'] = request.form['source']
         form['destination'] = request.form['destination']
         form['date'] = request.form['date']
@@ -654,6 +654,15 @@ def register():
         contact = form.contact.data
         address = form.address.data
 
+
+        with sqlite3.connect("CabSharing.db") as con:
+            cur = con.cursor()
+            cur.execute("select * from users where username=? or email=? or phone=?", (username, email,contact))
+            result=cur.fetchall()
+            if result:
+                flash('Username or email or phone already taken', 'danger')
+                return render_template('register.html', form=form)
+            con.commit()
 
         with sqlite3.connect("CabSharing.db") as con:
             cur = con.cursor()
