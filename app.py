@@ -640,9 +640,31 @@ def verifyphone():
     return render_template('verifyphone.html')
 
 
+@app.route('/profile', methods=['GET', 'POST'])
+@is_logged_in
+def profile():
+
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    cur.execute("select * from users where username = ?",[session['username']])
+    result = cur.fetchone()
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        phone = request.form['phone']
+        birth_year = request.form['birthyear']
+        bio = request.form['bio']
+        print bio
+        cur.execute("update users set name=?,email=?,phone=?, birth_year=?,bio=? where username=?", (name, email,phone,birth_year,bio,session['username']))
+        con.commit()
+        flash("Saved successfully.")
+        cur.close()
+    return render_template('profile.html',result=result)
+
+
 # User Register
 @app.route('/register', methods=['GET', 'POST'])
-def register():
+def registr():
     global email_toverify
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():

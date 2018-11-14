@@ -16,8 +16,9 @@
             {% if session.logged_in %}
 
                 <li class="dropdown">
-                  <button class="btn btn-default" type="button" >
-                  <i class="material-icons" style="font-size: 30px">person_outline</i></button>
+                  <!-- <button class="btn btn-default" type="button" > -->
+                  <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><i class="material-icons" style="font-size: 30px">person_outline</i></button>
+                  <!-- <i class="material-icons" style="font-size: 30px">person_outline</i></button> -->
                   <ul class="dropdown-menu " id="drop-menu">
                     <li class="lead">
                          <a href="/dashboard">Dashboard </a>
@@ -34,7 +35,7 @@
                     </li>
                     <li class="divider"></li>
                     <li class="lead">
-                      <a href="#">Profile</a>
+                      <a href="/profile">Profile</a>
                     </li>
                     <li class="lead">
                       <a href="/logout">Log Out</a>
