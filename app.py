@@ -593,7 +593,7 @@ def register():
             cur.execute("INSERT INTO users(name, email, username, password,phone,address) VALUES(?,?,?,?,?,?)", (name, email, username, password,contact,address))
 
             con.commit()
-        flash('You are now registered and Please verify your email and phone number', 'success')
+        flash('You are now registered. Please verify your email address', 'success')
         email_toverify=email
         return redirect(url_for('verify'))
         
