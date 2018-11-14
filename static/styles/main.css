@@ -31,7 +31,7 @@ transition: all 200ms ease-in;
 }
 }*/
 
-.dropdown .dropdown-menu {
+/* .dropdown .dropdown-menu {
     -webkit-transition: all 0.3s;
     -moz-transition: all 0.3s;
     -ms-transition: all 0.3s;
@@ -41,9 +41,9 @@ transition: all 200ms ease-in;
     max-height: 0;
     display: block;
     opacity: 0;
-}
+} */
 
-.dropdown:hover .dropdown-menu {
+/* .dropdown:hover .dropdown-menu {
     max-height: 500px;
     opacity: 1;
-}
+} */

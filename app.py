@@ -625,6 +625,23 @@ def verifyphone():
     return render_template('verifyphone.html')
 
 
+@app.route('/profile', methods=['GET', 'POST'])
+@is_logged_in
+def profile():
+
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    cur.execute("select * from users where username = ?",[session['username']])
+    result = cur.fetchone()
+    if request.method == 'POST':
+        name = request.form['name']
+        email = request.form['email']
+        phone = request.form['phone']
+        
+
+    return render_template('profile.html',result=result)
+
+
 # User Register
 @app.route('/register', methods=['GET', 'POST'])
 def register():
