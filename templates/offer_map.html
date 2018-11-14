@@ -1,237 +1,241 @@
 <!DOCTYPE html>
 <html>
-  <head>
-      <title>Car Sharing</title>
-      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/design.css') }}">
-      <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/main.css') }}">
-      <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-      <meta name="google-signin-client_id" content="272416681581-52u3ck9rlbt1hogin5nfjvtpbk2ku92t.apps.googleusercontent.com">
-      <script src="https://apis.google.com/js/platform.js" async defer></script>
-      <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-      <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
-      <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-      <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-      <meta charset="utf-8">
-  </head>
-  <body>
-      {% include 'includes/_navbar.html' %}
-    <div class="container-fluid" style="height: 100%;width: 100%; margin-top: 5%;">
-<div class="container split left" style="height: 50%;width: 50%;padding-left: 100px;">
-  <div>
-    <h3>Ride Details</h3>
-    <form method="POST">
+<head>
+  <title>Car Sharing</title>
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/design.css') }}">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='styles/main.css') }}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <meta name="google-signin-client_id" content="272416681581-52u3ck9rlbt1hogin5nfjvtpbk2ku92t.apps.googleusercontent.com">
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <meta name="viewport" content="initial-scale=1.0, user-scalable=no">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
-      <div class="form-group"></div>
-      <div class="well">
-        <div class="form-group">
-          <label for="date">Pick-up</label>
-          <input id="origin-input" name="source" class="controls form-control" type="text" placeholder="Enter an origin location">
-        </div>
+  <meta charset="utf-8">
+</head>
 
-        <div class="form-group">
-          <label for="date">Drop-off</label>
-          <input id="destination-input" name="destination" class="controls form-control" type="text" placeholder="Enter a destination location">
-        </div>
+<body>
+  {% include 'includes/_navbar.html' %}
+  <div class="container-fluid" style="height: 100%;width: 100%; margin-top: 5%;">
+    <div class="container split left" style="height: 50%;width: 50%;padding-left: 100px;">
+      <div>
+        <h3>Ride Details</h3>
+        <form method="POST">
+
+          <div class="form-group"></div>
+          <div class="well">
+            <div class="form-group">
+              <label for="date">Pick-up</label>
+              <input id="origin-input" name="source" class="controls form-control" type="text" placeholder="Enter an origin location">
+            </div>
+
+            <div class="form-group">
+              <label for="date">Drop-off</label>
+              <input id="destination-input" name="destination" class="controls form-control" type="text" placeholder="Enter a destination location">
+            </div>
+          </div>
+
+          <div id="mode-selector" class="controls" style="display: none;">
+            <input type="radio" name="type" id="changemode-walking">
+            <label for="changemode-walking">Walking</label>
+
+            <input type="radio" name="type" id="changemode-transit">
+            <label for="changemode-transit">Transit</label>
+
+            <input type="radio" name="type" id="changemode-driving" checked="checked">
+            <label for="changemode-driving">Driving</label>
+            <input id="lat1" name="lat1" class="controls form-control" type="text" placeholder="none">
+            <input id="long1" name="long1" class="controls form-control" type="text" placeholder="none">
+            <input id="lat2" name="lat2" class="controls form-control" type="text" placeholder="none">
+            <input id="long2" name="long2" class="controls form-control" type="text" placeholder="none">
+          </div>
+
+          <div class="well">
+            <div class="form-group">
+              <label for="date">Date</label>
+              <input type="date" name="date" class=" controls form-control">
+            </div>
+            <div class="form-group">
+              <label for="time">Time</label>
+              <input type="time" name="time" class="form-control">
+            </div>
+          </div>
+          <div class="well">
+            <div class="form-group">
+              <label for="price">Price per co-traveller</label>
+              <input type="number" name="price" class="form-control">
+            </div>
+            <div class="form-group">
+              <label for="seats">Number of seats</label>
+              <input type="numberOfSeats" name="seats" class="form-control" min="1" max="5">
+            </div>
+            <div class="form-group">
+              <label for="details">Ride Details</label>
+              <br>
+              <textarea rows="4" cols="100" name="details" class="form-control" form="usrform" placeholder="Anything to add about your ride..."></textarea>
+              <br>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Submit</button>
+        
+
+        </form>
       </div>
 
-      <div id="mode-selector" class="controls" style="display: none;">
-        <input type="radio" name="type" id="changemode-walking">
-        <label for="changemode-walking">Walking</label>
 
-        <input type="radio" name="type" id="changemode-transit">
-        <label for="changemode-transit">Transit</label>
+    </div>
 
-        <input type="radio" name="type" id="changemode-driving" checked="checked">
-        <label for="changemode-driving">Driving</label>
-        <input id="lat1" name="lat1" class="controls form-control" type="text" placeholder="none">
-        <input id="long1" name="long1" class="controls form-control" type="text" placeholder="none">
-        <input id="lat2" name="lat2" class="controls form-control" type="text" placeholder="none">
-        <input id="long2" name="long2" class="controls form-control" type="text" placeholder="none">
-      </div>
-
-      <div class="well">
-        <div class="form-group">
-          <label for="date">Date</label>
-          <input type="date" name="date" class=" controls form-control">
-        </div>
-        <div class="form-group">
-          <label for="time">Time</label>
-          <input type="time" name="time" class="form-control">
-        </div>
-      </div>
-
-      <div class="form-group">
-        <label for="price">Price per co-traveller</label>
-        <input type="number" name="price" class="form-control">
-      </div>
-      <div class="form-group">
-        <label for="seats">Number of seats</label>
-        <input type="numberOfSeats" name="seats" class="form-control" min="1" max="5">
-      </div>
-      <div class="form-group">
-        <label for="details">Ride Details</label>
-        <br>
-        <textarea rows="4" cols="100" name="details" class="form-control" form="usrform" placeholder="Anything to add about your ride..."></textarea>
-        <br>
-
-      </div>
-      <button type="submit" class="btn btn-primary">Submit</button>
+    <div class=" container split right " style="height: 50%;width: 50%">
+      <h3>Ride Summary</h3>
+      <div id="map" style="height: 100%; width:80%;"></div>
+    </div>
 
 
-    </form>
+
   </div>
 
 
-</div>
+  <script>
+    // This example requires the Places library. Include the libraries=places
+    // parameter when you first load the API. For example:
+    // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
 
-<div class=" container split right " style="height: 50%;width: 50%">
-  <h3>Ride Summary</h3>
-  <div id="map" style="height: 100%; width:80%;"></div>
-</div>
+    function initMap() {
+      var map = new google.maps.Map(document.getElementById('map'), {
+        mapTypeControl: false,
+        center: { lat: 17.3850, lng: 78.4867 },
+        zoom: 13
+      });
 
+      new AutocompleteDirectionsHandler(map);
+    }
 
+    /**
+     * @constructor
+    */
+    function AutocompleteDirectionsHandler(map) {
+      this.map = map;
+      this.originPlaceId = null;
+      this.destinationPlaceId = null;
+      this.travelMode = 'DRIVING';
+      var originInput = document.getElementById('origin-input');
+      var destinationInput = document.getElementById('destination-input');
+      var modeSelector = document.getElementById('mode-selector');
+      this.directionsService = new google.maps.DirectionsService;
+      this.directionsDisplay = new google.maps.DirectionsRenderer;
+      this.directionsDisplay.setMap(map);
 
-</div>
+      var originAutocomplete = new google.maps.places.Autocomplete(
+        originInput, { placeIdOnly: true });
+      var destinationAutocomplete = new google.maps.places.Autocomplete(
+        destinationInput, { placeIdOnly: true });
 
+      this.setupClickListener('changemode-walking', 'WALKING');
+      this.setupClickListener('changemode-transit', 'TRANSIT');
+      this.setupClickListener('changemode-driving', 'DRIVING');
 
-<script>
-  // This example requires the Places library. Include the libraries=places
-  // parameter when you first load the API. For example:
-  // <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+      this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
+      this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
 
-  function initMap() {
-    var map = new google.maps.Map(document.getElementById('map'), {
-      mapTypeControl: false,
-      center: { lat: 17.3850, lng: 78.4867 },
-      zoom: 13
-    });
+      // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
+      // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
+      // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
+    }
 
-    new AutocompleteDirectionsHandler(map);
-  }
+    // Sets a listener on a radio button to change the filter type on Places
+    // Autocomplete.
+    AutocompleteDirectionsHandler.prototype.setupClickListener = function (id, mode) {
+      var radioButton = document.getElementById(id);
+      var me = this;
+      radioButton.addEventListener('click', function () {
+        me.travelMode = mode;
+        me.route();
+      });
+    };
 
-  /**
-   * @constructor
-  */
-  function AutocompleteDirectionsHandler(map) {
-    this.map = map;
-    this.originPlaceId = null;
-    this.destinationPlaceId = null;
-    this.travelMode = 'DRIVING';
-    var originInput = document.getElementById('origin-input');
-    var destinationInput = document.getElementById('destination-input');
-    var modeSelector = document.getElementById('mode-selector');
-    this.directionsService = new google.maps.DirectionsService;
-    this.directionsDisplay = new google.maps.DirectionsRenderer;
-    this.directionsDisplay.setMap(map);
+    AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function (autocomplete, mode) {
+      var me = this;
+      autocomplete.bindTo('bounds', this.map);
+      autocomplete.addListener('place_changed', function () {
+        var place = autocomplete.getPlace();
+        if (!place.place_id) {
+          window.alert("Please select an option from the dropdown list.");
+          return;
+        }
+        if (mode === 'ORIG') {
+          me.originPlaceId = place.place_id;
+        } else {
+          me.destinationPlaceId = place.place_id;
+        }
+        me.route();
+      });
 
-    var originAutocomplete = new google.maps.places.Autocomplete(
-      originInput, { placeIdOnly: true });
-    var destinationAutocomplete = new google.maps.places.Autocomplete(
-      destinationInput, { placeIdOnly: true });
+    };
 
-    this.setupClickListener('changemode-walking', 'WALKING');
-    this.setupClickListener('changemode-transit', 'TRANSIT');
-    this.setupClickListener('changemode-driving', 'DRIVING');
-
-    this.setupPlaceChangedListener(originAutocomplete, 'ORIG');
-    this.setupPlaceChangedListener(destinationAutocomplete, 'DEST');
-
-    // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(originInput);
-    // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(destinationInput);
-    // this.map.controls[google.maps.ControlPosition.TOP_LEFT].push(modeSelector);
-  }
-
-  // Sets a listener on a radio button to change the filter type on Places
-  // Autocomplete.
-  AutocompleteDirectionsHandler.prototype.setupClickListener = function (id, mode) {
-    var radioButton = document.getElementById(id);
-    var me = this;
-    radioButton.addEventListener('click', function () {
-      me.travelMode = mode;
-      me.route();
-    });
-  };
-
-  AutocompleteDirectionsHandler.prototype.setupPlaceChangedListener = function (autocomplete, mode) {
-    var me = this;
-    autocomplete.bindTo('bounds', this.map);
-    autocomplete.addListener('place_changed', function () {
-      var place = autocomplete.getPlace();
-      if (!place.place_id) {
-        window.alert("Please select an option from the dropdown list.");
+    AutocompleteDirectionsHandler.prototype.route = function () {
+      if (!this.originPlaceId || !this.destinationPlaceId) {
         return;
       }
-      if (mode === 'ORIG') {
-        me.originPlaceId = place.place_id;
-      } else {
-        me.destinationPlaceId = place.place_id;
-      }
-      me.route();
-    });
+      var me = this;
 
-  };
+      var lat1, lat2, lon1, lon2;
 
-  AutocompleteDirectionsHandler.prototype.route = function () {
-    if (!this.originPlaceId || !this.destinationPlaceId) {
-      return;
-    }
-    var me = this;
+      geocoder = new google.maps.Geocoder();
+      var address = document.getElementById("origin-input").value;
+      geocoder.geocode({ 'address': address }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          lat1 = results[0].geometry.location.lat();
+          lon1 = results[0].geometry.location.lng();
+          console.log("source" + lat1);
+          console.log("source" + lon1);
+          document.getElementById("lat1").value = lat1;
+          document.getElementById("long1").value = lon1;
 
-    var lat1, lat2, lon1, lon2;
-
-    geocoder = new google.maps.Geocoder();
-    var address = document.getElementById("origin-input").value;
-    geocoder.geocode({ 'address': address }, function (results, status) {
-      if (status == google.maps.GeocoderStatus.OK) {
-        lat1 = results[0].geometry.location.lat();
-        lon1 = results[0].geometry.location.lng();
-        console.log("source" + lat1);
-        console.log("source" + lon1);
-        document.getElementById("lat1").value = lat1;
-        document.getElementById("long1").value = lon1;
-
-      }
+        }
 
 
 
-      else {
-        alert("Geocode was not successful for the following reason: " + status);
-      }
-    });
+        else {
+          alert("Geocode was not successful for the following reason: " + status);
+        }
+      });
 
-    var address = document.getElementById("destination-input").value;
-    geocoder.geocode({ 'address': address }, function (results, status) {
-      if (status == google.maps.GeocoderStatus.OK) {
-        lat2 = results[0].geometry.location.lat();
-        lon2 = results[0].geometry.location.lng();
-        console.log("dest" + lat2);
-        console.log("dest" + lon2);
-        document.getElementById("lat2").value = lat2;
-        document.getElementById("long2").value = lon2;
+      var address = document.getElementById("destination-input").value;
+      geocoder.geocode({ 'address': address }, function (results, status) {
+        if (status == google.maps.GeocoderStatus.OK) {
+          lat2 = results[0].geometry.location.lat();
+          lon2 = results[0].geometry.location.lng();
+          console.log("dest" + lat2);
+          console.log("dest" + lon2);
+          document.getElementById("lat2").value = lat2;
+          document.getElementById("long2").value = lon2;
 
-      }
-      else {
-        alert("Geocode was not successful for the following reason: " + status);
-      }
-    });
+        }
+        else {
+          alert("Geocode was not successful for the following reason: " + status);
+        }
+      });
 
 
 
-    this.directionsService.route({
-      origin: { 'placeId': this.originPlaceId },
-      destination: { 'placeId': this.destinationPlaceId },
-      travelMode: this.travelMode
-    }, function (response, status) {
-      if (status === 'OK') {
-        me.directionsDisplay.setDirections(response);
-      } else {
-        window.alert('Directions request failed due to ' + status);
-      }
-    });
-  };
+      this.directionsService.route({
+        origin: { 'placeId': this.originPlaceId },
+        destination: { 'placeId': this.destinationPlaceId },
+        travelMode: this.travelMode
+      }, function (response, status) {
+        if (status === 'OK') {
+          me.directionsDisplay.setDirections(response);
+        } else {
+          window.alert('Directions request failed due to ' + status);
+        }
+      });
+    };
 
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtw56_J9YjK6Kptzau4VLaQNSKL4hnjdw&libraries=places&callback=initMap"
-  async defer></script>
+  </script>
+  <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBtw56_J9YjK6Kptzau4VLaQNSKL4hnjdw&libraries=places&callback=initMap"
+    async defer></script>
+  <br><br><br><br><br><br><br><br><br><br>
+  {% include 'includes/_footer.html' %}
 </body>

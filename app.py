@@ -24,14 +24,7 @@ mail = Mail(app)
 
 
 
-@app.route("/sendmail")
-def sendmail():
-   otp=random.randrange(1000, 9999, 1)
-   subject='Your sharcab OTP is'+ str(otp)
-   msg = Message(subject, sender = 'sankettheflash@gmail.com', recipients = ['shubham.pahuja1996@gmail.com'])
-   msg.body = subject
-   mail.send(msg)
-   return "Sent"
+
 
 @app.route('/')
 def index():
@@ -86,6 +79,7 @@ def is_logged_in(f):
     return wrap
 
 @app.route('/rides_accept/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
+@is_logged_in
 def ride_accept(rideId,userName):
     reason='Your ride is confirmed.'
     con = sqlite3.connect("CabSharing.db")
@@ -160,6 +154,7 @@ def ride_accept(rideId,userName):
 
 
 @app.route('/rides_reject/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
+@is_logged_in
 def ride_reject(rideId,userName):
     reason='Your ride is rejected.'
     con = sqlite3.connect("CabSharing.db")
@@ -222,6 +217,7 @@ def ride_reject(rideId,userName):
 
 
 @app.route('/rides_found/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
+@is_logged_in
 def ride(rideId,userName):
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
@@ -268,6 +264,7 @@ def ride(rideId,userName):
 
 
 @app.route('/rides_request/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
+@is_logged_in
 def rides_request(rideId,userName):
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
@@ -323,15 +320,16 @@ def tdashboard():
     return render_template('tdashboard.html' , username = name[2] , result= result , count = len(result))
 
 @app.route('/findcab' , methods=['GET', 'POST'])
-@is_logged_in
 def findcab():
     if request.method == 'POST':
         print("here")
         source = request.form['source']
         destination = request.form['destination']
         date = request.form['date']
-        date=time.strptime(date,"%Y-%m-%d")
-        ride_time = request.form['time']
+        date = date[:10]
+        print date
+        date=time.strptime(date,"%m/%d/%Y")
+        # ride_time = request.form['time']
         
         lt1=request.form['lat1']
         ln1=request.form['long1']
@@ -392,6 +390,7 @@ def findcab():
     return render_template('find.html')
 
 @app.route('/rides')
+@is_logged_in
 def rides():
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
@@ -403,7 +402,20 @@ def rides():
     con.commit()
     return render_template('rides.html' , result = result , count = count , flag = 0)
 
+@app.route('/rides_delete/<string:rideId>', methods=['GET', 'POST'])
+@is_logged_in
+def rides_delete(rideId):
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    cur.execute(" update rides_offered set valid=0 where rideId = ? and username = ? " , (rideId,session['username']) )
+    con.commit()
+    cur.close()
+    return redirect(url_for('rides'))
+
+
+
 @app.route('/see_cotravellers/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
+@is_logged_in
 def see_cotravellers(rideId,userName):
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
@@ -441,6 +453,7 @@ def see_cotravellers(rideId,userName):
 
 
 @app.route('/past_rides')
+@is_logged_in
 def past_rides():
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
@@ -456,6 +469,7 @@ def past_rides():
     return render_template('past_rides.html' , result = result , count = count)
 
 @app.route('/bookings')
+@is_logged_in
 def bookings():
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
@@ -473,6 +487,7 @@ def bookings():
     return render_template('bookings.html',result = user_bookings,count=len(user_bookings))
 
 @app.route('/messages')
+@is_logged_in
 def messages():
     return render_template('messages.html')
 
@@ -511,7 +526,7 @@ def offer():
 
         with sqlite3.connect("CabSharing.db") as con:
             cur = con.cursor()
-            cur.execute("select * from rides_offered where username = ?", [session['username']])
+            cur.execute("select * from rides_offered where username = ? and valid=1", [session['username']])
             result= cur.fetchall()
             count = len(result)
             return render_template('rides.html' , result = result , count = count)
@@ -662,7 +677,7 @@ def register():
             cur.execute("INSERT INTO users(name, email, username, password,phone,address) VALUES(?,?,?,?,?,?)", (name, email, username, password,contact,address))
 
             con.commit()
-        flash('You are now registered and Please verify your email and phone number', 'success')
+        flash('You are now registered. Please verify your email address', 'success')
         email_toverify=email
         return redirect(url_for('verify'))
         
