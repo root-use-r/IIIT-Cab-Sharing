@@ -1,12 +1,17 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+  <h3>{{total_rides}} rides found.</h3>
   {% for i in range(total_rides) %}
+  <hr>
+    <p style="color:blue">    {{rides[i][8]}}     {{rides[i][9]}}</p>  
   <a href="rides_found/{{rides[i][0]}}/{{rides[i][1]}}" class="row">
     <div class="col-sm-12">
       <div class="panel panel-default text-left">
         <div class="panel-body"><strong class="lead">
-            <p class="text-right">
+          
+          
+          <p class="text-right">
               <i class="fa fa-rupee" style="font-size:36px"></i> {{rides[i][10]}}
             </p>
             {{rides[i][2]}}
