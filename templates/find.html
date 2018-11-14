@@ -1,6 +1,17 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+
 <center>
     <h2><strong>Find a ride</strong><br></h2>
 
@@ -16,7 +27,7 @@
             <input type="text" name="destination" id="destination" class="form-control input-lg well" style="width:50%;"
                 placeholder="Going To">
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label for="date">Date</label>
             <input type="date" name="date" id="data" style="width:50%;" class="form-control">
         </div>
@@ -24,8 +35,20 @@
         <div class="form-group">
             <label for="time">Time</label>
             <input type="time" name="time" id="time" style="width:50%;" class="form-control">
+        </div> -->
+        <div class="form-group" style ="width:50%">
+            <div class='input-group date' id='datetimepicker1' >
+                <input type='text'name="date" class="form-control" />
+                <span class="input-group-addon">
+                    <span class="glyphicon glyphicon-calendar"></span>
+                </span>
+            </div>
         </div>
-
+        <script type="text/javascript">
+            $(function () {
+                $('#datetimepicker1').datetimepicker();
+            });
+        </script>
 
 
         <button type="submit" class="btn btn-info">Submit</button>

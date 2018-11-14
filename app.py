@@ -1,3 +1,4 @@
+import requests
 from flask import Flask, render_template, flash, redirect, url_for, session, request, logging
 from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from functools import wraps
@@ -571,6 +572,57 @@ def verify():
     print emailotp
 
     return render_template('verify.html')
+
+
+
+phoneotp=0000
+@app.route('/verifyphone', methods=['GET', 'POST'])
+def verifyphone():
+    global phoneotp
+    if 'logged_in' in session:
+        uname = session['username']
+        with sqlite3.connect("CabSharing.db") as con:
+                result = []
+                cur = con.cursor()
+                cur.execute("select * from users where username = ?",[uname])
+                result = cur.fetchall()
+                phone_toverify=result[0][3]
+                cur.close()
+    if request.method == 'POST':
+        eotp = request.form['eotp']
+        print eotp
+        if eotp==phoneotp:
+            with sqlite3.connect("CabSharing.db") as con:
+                cur = con.cursor()
+                cur.execute("update users set mobile_verified=1 where phone=?", [phone_toverify])
+                con.commit()
+            flash('Your number is verified', 'success')
+            if 'logged_in' in session:
+                 return redirect(url_for('tdashboard'))
+            return redirect(url_for('login'))
+        else:
+            flash('Invalid OTP', 'danger')
+
+    url = "https://www.fast2sms.com/dev/bulk"
+    a= random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&')
+    b= random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&')
+    c= random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&')
+    d= random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&')
+    e= random.choice('ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&')
+    phoneotp=a+b+c+d+e
+    querystring = {"authorization":"8nH2jShLcMyCNUZwQIYmO5gvbzs0uxDV3Xq1eaEJG7PlRprFAovt8Fye6uTGw1QEakM5HIXYBhmLUxKR","sender_id":"FSTSMS","language":"english","route":"qt","numbers":""+phone_toverify+"","message":"3193","variables":"{AA}","variables_values":""+phoneotp+""}
+
+    headers = {
+    'cache-control': "no-cache"
+    }
+
+    response = requests.request("GET", url, headers=headers, params=querystring)
+
+    print(response.text)
+    print phoneotp
+
+
+    return render_template('verifyphone.html')
 
 
 # User Register
