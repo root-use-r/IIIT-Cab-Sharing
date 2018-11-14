@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+  <h1>Phone Verification</h1>
+  <p>One time password(OTP) is sent to your registered number.</p>
+  <form action="" method="POST">
+    <div class="form-group">
+      <label>Enter OTP</label>
+      <input type="text" name="eotp" class="form-control" >
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <a href="/login" class="btn btn-danger">Cancel</a>
+  </form>
+{% endblock %}
