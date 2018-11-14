@@ -11,7 +11,6 @@
         <li ><a  href="rides">Rides Offered</a></li>
         <li ><a  href="bookings">Bookings</a></li>
         <li ><a  href="messages">Messages</a></li>
-        <li ><a  href="#">Ride Alerts</a></li>
         <li ><a  href="profile">Profile</a></li>
       </ul>
       <br>
@@ -41,7 +40,7 @@
                 <div class="col-sm-3" style='border:2em'>
                   <div class="well">
                     <p><a href="#">My Profile</a></p>
-                    <p  >Hello <strong ><em id="username" class="text-uppercase">{{username}}</em></strong></p>
+                    <p  >Hello <strong ><em id="username" class="text-uppercase">{{username[2]}}</em></strong></p>
                     <!-- <img src="avatar.jpg" class="img-circle" height="65" width="65" alt="<i class="material-icons">add_a_photo</i>"> -->
                     <i class="material-icons" style="font-size:48px">add_a_photo</i>
                  </div>
@@ -56,8 +55,20 @@
                       <p class="text-left"><b>Member Verification</b></p>
                     </div>
                     <div class="text-left ">
-                      <p ><span class="verify-fail glyphicon glyphicon-alert"></span><a href="/verifyphone" class="verify" id="verify-phone"> Verify your phone number</a></p>
-                      <p ><span class="verify-fail glyphicon glyphicon-alert"></span><a href="/verify" class="verify" id="verify-email"> Verify your email</a></p>
+                      <p >
+                        {% if username[7] == 0 %}
+                        <span class="verify-fail glyphicon glyphicon-alert"></span><a href="/verifyphone" class="verify" id="verify-phone"> Verify your phone number</a></p>
+                        {% else %}
+                        <p ><span class="verified glyphicon glyphicon-ok-sign"></span><a href="" class="verified" > Phone Verified</a></p>
+                        {% endif %}
+
+                        {% if username[6]==0 %}
+                        <p ><span class="verify-fail glyphicon glyphicon-alert"></span><a href="/verify" class="verify" > Verify your email</a></p>
+                        {% else %}
+
+                        <p ><span class="verified glyphicon glyphicon-ok-sign"></span><a href="" class="verified" id="verify-email"> E-mail Verified</a></p>
+                        {% endif %}
+
                       <p ><span class="verify-fail glyphicon glyphicon-alert"></span><a href="#" class="verify" id="verify-id"> Verify your id</a></p>
                     </div>
                   </div>

@@ -5,6 +5,9 @@
     background-color: white;
     color: red;
   }
+  .verified{
+    color:  mediumseagreen;
+  }
 
   #username{
     color: green;
@@ -15,6 +18,46 @@
     background-color: white;
   }
 
+  .first{
+    height: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;    
+    background-image: url("image2.jpg");
+    padding-top: 4%
+  }
+
+  .tired{
+    padding-top: 25%;
+    font-size: 48px;
+    color: white;
+  }
+
+  .small{
+    padding: 5%;
+  }
+
+  .offer-ride-btn{
+    font-size: 100px;
+    padding-left: 10%;
+  }
+
+  .find-ride{
+    font-size: 48px;
+  }
+
+img {
+  max-width: 60%;
+  max-height: 100%;
+ }
+
+.large-image{
+  height: 100%;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;    
+  background-image: url("image1.jpg");
+}
 /*@media (min-width: 768px) {
 .dropdown .dropdown-menu{
     display: block; 

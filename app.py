@@ -317,7 +317,7 @@ def tdashboard():
         cur.execute("select * from notification where username = ? ", [username])
         result = cur.fetchall()
 
-    return render_template('tdashboard.html' , username = name[2] , result= result , count = len(result))
+    return render_template('tdashboard.html' , username = name , result= result , count = len(result))
 
 @app.route('/findcab' , methods=['GET', 'POST'])
 def findcab():
@@ -327,7 +327,7 @@ def findcab():
         destination = request.form['destination']
         date = request.form['date']
         date = date[:10]
-        print date
+        # print date
         date=time.strptime(date,"%m/%d/%Y")
         # ride_time = request.form['time']
         
@@ -566,7 +566,7 @@ def verify():
                 cur.close()
     if request.method == 'POST':
         eotp = request.form['eotp']
-        print eotp
+        # print eotp
         if int(eotp)==emailotp:
             with sqlite3.connect("CabSharing.db") as con:
                 cur = con.cursor()
@@ -584,7 +584,7 @@ def verify():
     msg = Message(subject, sender = 'sankettheflash@gmail.com', recipients = [email_toverify])
     msg.body = subject
     mail.send(msg)
-    print emailotp
+    # print emailotp
 
     return render_template('verify.html')
 
@@ -605,7 +605,7 @@ def verifyphone():
                 cur.close()
     if request.method == 'POST':
         eotp = request.form['eotp']
-        print eotp
+        # print eotp
         if eotp==phoneotp:
             with sqlite3.connect("CabSharing.db") as con:
                 cur = con.cursor()
@@ -634,7 +634,7 @@ def verifyphone():
     response = requests.request("GET", url, headers=headers, params=querystring)
 
     print(response.text)
-    print phoneotp
+    # print phoneotp
 
 
     return render_template('verifyphone.html')
@@ -746,7 +746,7 @@ def login():
                     cur.execute("select * from notification where username = ? ", [username])
                     result = cur.fetchall()
 
-                    return render_template('tdashboard.html' , username = name[2] , result= result , count = len(result) )
+                    return render_template('tdashboard.html' , username = name , result= result , count = len(result) )
                 else:
                     error = 'Invalid login'
                     return render_template('login.html', error=error)
