@@ -3,6 +3,7 @@ from wtforms import Form, StringField, TextAreaField, PasswordField, validators
 from functools import wraps
 from math import sin, cos, sqrt, atan2, radians
 import time
+from datetime import date
 from passlib.hash import sha256_crypt
 import sqlite3
 
@@ -17,6 +18,38 @@ def index():
 @app.route('/signin')
 def signin():
     return render_template('Googlesignin.html')
+
+
+@app.route('/booking_history')
+def booking_history():
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    user_bookings=[]
+
+    username = session['username']
+    
+    print(username)
+    cur.execute("select * from rides_requested where username = ? and accepted = 1",[username])
+
+    result = cur.fetchall()
+    print()
+    print(result)
+
+    today = date.today()
+    today = time.strptime( str(today) , "%Y-%m-%d")
+
+    for i in range(len(result)):
+        cur.execute("select * from rides_offered where rideId = ? ", [result[i][0]]  )
+        final_result = cur.fetchone()
+        user_date=time.strptime(final_result[8],"%Y-%m-%d")
+        if user_date <= today:
+            user_bookings.append(final_result)
+    print(user_bookings)
+    cur.close()
+
+    return render_template('booking_history.html',result = user_bookings , count=len(user_bookings))
+
+
 
 # Check if user logged in
 def is_logged_in(f):
@@ -36,12 +69,15 @@ def ride_accept(rideId,userName):
     cur = con.cursor()
     cur.execute("update rides_requested set accepted=1 where rideId = ? and username = ?" , ( rideId , userName )) 
 
+    cur.execute("select * from users where username = ? " , [userName] )
+    contact = cur.fetchone()
+
     cur.execute("INSERT INTO notification(rideId , username , detail ) VALUES( ? , ? , ? ) ", (rideId, userName , reason) )
     con.commit()
     cur.execute("select * from rides_offered where rideId = ?", [rideId])
     ride_data=cur.fetchone()
-    print ride_data
-    print ride_data[14]
+    # print ride_data
+    # print ride_data[14]
     seats_left=ride_data[14] - 1
     cur.execute("update rides_offered set seatsleft=? where rideId = ? " , (seats_left , rideId )) 
     if seats_left==0:
@@ -50,7 +86,7 @@ def ride_accept(rideId,userName):
         cur.execute("select * from rides_requested where accepted=3 and rideId= ?", [rideId])
         ridecancelled=cur.fetchall()
         for i in range(len(ridecancelled)):
-            cur.execute("INSERT INTO notification(rideId , username , detail ) VALUES( ? , ? , ? ) ", (rideId, ridecancelled[i][1] , reason) )
+            cur.execute("INSERT INTO notification(rideIride.htmld , username , detail ) VALUES( ? , ? , ? ) ", (rideId, ridecancelled[i][1] , reason) )
    
     con.commit()
     cur.close()
@@ -75,14 +111,28 @@ def ride_accept(rideId,userName):
         temp_user=cur.fetchone()
         user_who_requested.append(temp_user)
 
+
+    cur.execute(" select * from rides_requested where rideId = ? and accepted = 1 " , [rideId] )
+    temp_users_whose_ride_accepted = cur.fetchall()
     
+    # print(temp_users_whose_ride_accepted)
+    # print("mother")
+
+    users_whose_ride_accepted = []
+    j=0
+    for i in range(len(temp_users_whose_ride_accepted) ):
+        users_whose_ride_accepted.append( temp_users_whose_ride_accepted[i][1] )
+        j=j+1
+ 
+    # print()
+    # print(j)
+    # print()
     # cur.execute("select * from rides_requested where rideId = ? and accepted = 1" , [rideId] )
     # ride_accepted=cur.fetchall()
-
     if taken_result :
-        return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=1, user=user ,user_who_requested=user_who_requested )
+        return render_template( 'ride.html', contact=contact , rides=rides ,  myUserName=session['username'] , flag=1, user=user ,user_who_requested=user_who_requested , users_whose_ride_accepted=users_whose_ride_accepted , len_users_whose_ride_accepted = j )
     
-    return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=0, user=user ,user_who_requested=user_who_requested, users_length=len(user_who_requested) )
+    return render_template( 'ride.html',contact=contact, rides=rides,  myUserName=session['username'] , flag=0, user=user ,user_who_requested=user_who_requested, users_length=len(user_who_requested) , users_whose_ride_accepted=users_whose_ride_accepted , len_users_whose_ride_accepted = j )
 
 
 
@@ -104,6 +154,10 @@ def ride_reject(rideId,userName):
     result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [session['username']])
     user = cur.fetchone()
 
+    cur.execute("select * from users where username = ? " , [userName])
+    contact = cur.fetchone()
+
+
     cur.execute("select * from rides_requested where rideId = ? and username = ? " , ( rideId , session['username'] ) )
     taken_result = cur.fetchone()
 
@@ -119,10 +173,27 @@ def ride_reject(rideId,userName):
     
     print(user_who_requested)
 
-    if taken_result :
-        return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=1, user=user ,user_who_requested=user_who_requested )
+
+
+    cur.execute(" select * from rides_requested where rideId = ? and accepted = 1 " , [rideId] )
+    temp_users_whose_ride_accepted = cur.fetchall()
     
-    return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=0, user=user ,user_who_requested=user_who_requested, users_length=len(user_who_requested) )
+    # print(temp_users_whose_ride_accepted)
+    # print("mother")
+
+    users_whose_ride_accepted = []
+    j=0
+    for i in range(len(temp_users_whose_ride_accepted)):
+        users_whose_ride_accepted.append( temp_users_whose_ride_accepted[i][1] )
+        j=j+1
+
+
+
+
+    if taken_result :
+        return render_template( 'ride.html',contact=contact, rides=rides , myUserName=session['username'] , flag=1, user=user ,user_who_requested=user_who_requested , users_whose_ride_accepted=users_whose_ride_accepted , len_users_whose_ride_accepted = j)
+    
+    return render_template( 'ride.html', contact = contact ,  rides=rides , myUserName=session['username'] , flag=0, user=user ,user_who_requested=user_who_requested, users_length=len(user_who_requested) , users_whose_ride_accepted=users_whose_ride_accepted , len_users_whose_ride_accepted = j)
 
 
 
@@ -136,6 +207,9 @@ def ride(rideId,userName):
     result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [userName])
     user = cur.fetchone()
 
+    cur.execute("select * from users where username = ? " , [userName])
+    contact = cur.fetchone()
+
     cur.execute("select * from rides_requested where rideId = ? and username = ? " , ( rideId , session['username'] ) )
     taken_result = cur.fetchone()
 
@@ -149,12 +223,25 @@ def ride(rideId,userName):
         user_who_requested.append(temp_user)
 
     
-    print(user_who_requested)
+    # print(user_who_requested)
+    cur.execute(" select * from rides_requested where rideId = ? and accepted = 1 " , [rideId] )
+    temp_users_whose_ride_accepted = cur.fetchall()
+    
+    # print(temp_users_whose_ride_accepted)
+    # print("mother")
+
+    users_whose_ride_accepted = []
+    j=0
+    for i in range(len(temp_users_whose_ride_accepted)):
+        users_whose_ride_accepted.append( temp_users_whose_ride_accepted[i][1] )
+        j=j+1
+
+
 
     if taken_result :
-        return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=1, user=user ,user_who_requested=user_who_requested )
+        return render_template( 'ride.html', contact = contact, rides=rides , myUserName=session['username'] , flag=1, user=user ,user_who_requested=user_who_requested ,  users_whose_ride_accepted=users_whose_ride_accepted , len_users_whose_ride_accepted = j)
     
-    return render_template( 'ride.html', rides=rides , myUserName=session['username'] , flag=0, user=user ,user_who_requested=user_who_requested, users_length=len(user_who_requested) )
+    return render_template( 'ride.html', contact=contact ,  rides=rides , myUserName=session['username'] , flag=0, user=user ,user_who_requested=user_who_requested, users_length=len(user_who_requested) ,  users_whose_ride_accepted=users_whose_ride_accepted , len_users_whose_ride_accepted = j)
 
 
 @app.route('/rides_request/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
@@ -165,15 +252,33 @@ def rides_request(rideId,userName):
     rides = cur.fetchone()
     accepted = 0
 
+    cur.execute("select * from users where username = ? " , [userName] )
+    contact = cur.fetchone()
+
+
     cur.execute("INSERT INTO rides_requested(rideId , username , accepted ) VALUES( ? , ? , ? ) ", (rideId, userName,accepted) )
 
     cur.execute("SELECT * FROM USERS WHERE userName = ?", [userName])
     user = cur.fetchone()
     con.commit()
 
+
+    cur.execute(" select * from rides_requested where rideId = ? and accepted = 1 " , [rideId] )
+    temp_users_whose_ride_accepted = cur.fetchall()
+    
+    # print(temp_users_whose_ride_accepted)
+    # print("mother")
+
+    users_whose_ride_accepted = []
+    j=0
+    for i in range(len(temp_users_whose_ride_accepted)):
+        users_whose_ride_accepted.append( temp_users_whose_ride_accepted[2] )
+        j=j+1
+
     
 
-    return render_template( 'ride.html', rides=rides , myUserName = session['username'] , flag =1  , user=user  )
+    return render_template( 'ride.html', contact=contact, rides=rides , myUserName = session['username'] , flag =1  , user=user  ,  users_whose_ride_accepted=users_whose_ride_accepted , len_users_whose_ride_accepted = j)
+
 
 
 
@@ -181,7 +286,17 @@ def rides_request(rideId,userName):
 
 @app.route('/dashboard')
 def tdashboard():
-    return render_template('tdashboard.html')
+    username=session['username']
+    with sqlite3.connect("CabSharing.db") as con:
+        cur = con.cursor()
+        cur.execute("select * from users where userName = ? ", [username])
+        name = cur.fetchone()
+
+        result = []
+        cur.execute("select * from notification where username = ? ", [username])
+        result = cur.fetchall()
+
+    return render_template('tdashboard.html' , username = name[2] , result= result , count = len(result))
 
 @app.route('/findcab' , methods=['GET', 'POST'])
 @is_logged_in
@@ -262,7 +377,44 @@ def rides():
     result = cur.fetchall()
     count = len(result)
     con.commit()
-    return render_template('rides.html' , result = result , count = count)
+    return render_template('rides.html' , result = result , count = count , flag = 0)
+
+@app.route('/see_cotravellers/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
+def see_cotravellers(rideId,userName):
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    cotravellers = []
+    result=[]
+    temp_users_whose_ride_accepted=[]
+    
+    cur.execute(" select * from rides_requested where rideId = ? and accepted = 1 " , [rideId] )
+    temp_users_whose_ride_accepted = cur.fetchall()
+
+    cur.execute("SELECT * FROM rides_offered WHERE  username = ? and rideid = ?",  (userName, rideId ) )
+    result = cur.fetchall()
+
+    cur.execute("SELECT * FROM users WHERE  username = ? ", [userName] )
+    cotravellers.append(cur.fetchone())
+
+    cur.execute(" select * from rides_requested where rideId = ? and accepted = 1 " , [rideId] )
+    temp_users_whose_ride_accepted = cur.fetchall()
+
+    # print(temp_users_whose_ride_accepted)
+
+
+    for i in range(len(temp_users_whose_ride_accepted)):
+        cur.execute("SELECT * FROM users WHERE  username = ? ", [temp_users_whose_ride_accepted[i][1]] )
+        temp =  cur.fetchone()
+        cotravellers.append( temp)  
+
+    for i in range(len(cotravellers)):
+        print(cotravellers[i])
+    # print(len(cotravellers))
+    # print(result)
+
+    return render_template('see_cotravellers.html' , result = result ,cotravellers = cotravellers , len_cotravellers = len(cotravellers) , admin = cotravellers[0][2])
+
+
 
 @app.route('/past_rides')
 def past_rides():
@@ -439,7 +591,14 @@ def login():
 
                     # flash('You are now logged in', 'success')
                     # return redirect(url_for('dashboard'))
-                    return render_template('tdashboard.html' , name = username )
+                    cur.execute("select * from users where username = ?" , [username])
+                    name = cur.fetchone()
+
+                    result = []
+                    cur.execute("select * from notification where username = ? ", [username])
+                    result = cur.fetchall()
+
+                    return render_template('tdashboard.html' , username = name[2] , result= result , count = len(result) )
                 else:
                     error = 'Invalid login'
                     return render_template('login.html', error=error)

@@ -10,9 +10,40 @@
     color: green;
   }
 
-/*  .contact-owner{
-    background-color: blue;
-    font-size: 20px;
+  .my-container{
+    margin-top: 5%;
+    background-color: white;
   }
-*/
 
+/*@media (min-width: 768px) {
+.dropdown .dropdown-menu{
+    display: block; 
+  opacity:0;
+-webkit-transition: all 200ms ease-in;
+-moz-transition: all 200ms ease-in;
+-ms-transition: all 200ms ease-in;
+-o-transition: all 200ms ease-in;
+transition: all 200ms ease-in;
+}
+.dropdown:hover .dropdown-menu {
+    display: block;
+    opacity: 1;
+}
+}*/
+
+.dropdown .dropdown-menu {
+    -webkit-transition: all 0.3s;
+    -moz-transition: all 0.3s;
+    -ms-transition: all 0.3s;
+    -o-transition: all 0.3s;
+    transition: all 0.3s;
+
+    max-height: 0;
+    display: block;
+    opacity: 0;
+}
+
+.dropdown:hover .dropdown-menu {
+    max-height: 500px;
+    opacity: 1;
+}

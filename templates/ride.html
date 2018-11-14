@@ -55,7 +55,19 @@
         <div class="col-md-10 ">
           <div class="col-md-1"></div>
           <div class="col-md-8 ">
-              <button  class="btn btn-default btn-info"><i class="fa fa-address-card" ></i> Contact Owner</button>
+              {% if myUserName != rides[1] %}
+              <button  class="btn btn-default btn-info" data-toggle="collapse" data-target="#changeDetails"><i class="fa fa-address-card" ></i> Contact Owner</button>
+              <div id=changeDetails class="collapse" style="color:#708090">
+                <br>
+                <p>Can be contacted at {{contact[3]}}</p>
+                <p>Has e-mail id {{contact[4]}}</p>
+                <p>Lives in {{contact[5]}}</p>
+              </div>
+              {% else %}
+              <a  class="btn btn-default btn-info"><i class="fa fa-align-justify" ></i>
+               Add Details</a>
+              {% endif %}
+
               <br><br>
           </div>
         </div>
@@ -88,10 +100,26 @@
           </tr>
           <tr>
             <td style="color:#708090"><i class="fa fa-long-arrow-down" style="font-size:60px"></i></td>
+            <td> {{user[2]}}</td>
+            {% if len_users_whose_ride_accepted ==0  %}
             <td></td>
             <td></td>
             <td></td>
-            <td></td>
+            {% endif %}
+
+            {% if len_users_whose_ride_accepted != 0 %}
+              
+            {% for i in range( 3 ) %}
+            {% if i < len_users_whose_ride_accepted %}
+              <td>{{users_whose_ride_accepted[i] }}</td>
+            {% else %}
+              <td></td>
+            {% endif %}
+            {% endfor %}
+ 
+  
+            {% endif %}
+            
           </tr>
           <tr>
             <td style="color:#708090"><i class="fa fa-circle-o " style="font-size: 18px"></i> {{rides[3]}}</td>
@@ -118,7 +146,7 @@
             </td>
 
             <td class="col-md-6 text-center" >
-                <p  class="lead" style="font-size: 36px"><i class="fa fa-group "></i> 3</p>
+                <p  class="lead" style="font-size: 36px"><i class="fa fa-group "></i> {{rides[14]}} </p>
                 <p class="small">Available Seats</p>
             </td>
 
@@ -139,24 +167,19 @@
             <td colspan="2">  
               <br>
 
-              <div class="dropdown text-center ">
-                <div><i class="material-icons" style="font-size:48px;color:#696969">person_add</i></div>
-                <select class="btn btn-default">
-                  <option class="btn-default" value="1">1 seat</option>
-                  <option class="btn-default" value="2">2 seats</option>
-                  <option class="btn-default" value="3">3 seats</option>
-                </select>
-                <br><br>
-              </div>
 
               {% if flag == 0 %}
-                 <a  class="btn btn-default btn-info " href="/rides_request/{{rides[0]}}/{{myUserName}}" >
+                 <a  class="btn btn-default btn-danger " href="/rides_request/{{rides[0]}}/{{myUserName}}" >
                Request To Book </a>
               {% endif %}
 
               {% if flag == 1 %}
-                 <a  class="btn btn-default btn-success" > Already Requested</a>
+                 <a  class="btn btn-default btn-warning" > Already Requested</a>
               {% endif %}
+
+              {% if flag == 2 %}
+                 <a  class="btn btn-default btn-success" > Accepted</a>
+              {% endif %}              
               <br>
               <br>
             </td>
@@ -182,12 +205,12 @@
           <div>
             
               <div class="col-md-4">
-                <img src="/avatar.jpg" class="img-circle" height="65" width="65" alt="Avatar">
+                    <i class="material-icons" style="font-size:48px">add_a_photo</i>
               </div>
 
               <div class="col-md-8 text-left">
                 <p>
-                    Hello <strong><em id="username">{{name}}</em></strong>
+                    Hello <strong ><em id="username" class="text-uppercase">{{name}}</em></strong>
                 </p>
               </div>
 
@@ -212,20 +235,41 @@
             </div>
     
       </div>
+      <br><br>
     </div>
   </div>
 
 
-</div>
-{% if myUserName == rides[1] %}
-{% for i in range(users_length) %}
-<li>{{ user_who_requested[i][2]}}</li>
-<a  class="btn btn-default btn-info " href="/rides_accept/{{rides[0]}}/{{user_who_requested[i][0]}}" >
-  Accept </a>
-<a  class="btn btn-danger btn-info " href="/rides_reject/{{rides[0]}}/{{user_who_requested[i][0]}}" >
-  Reject </a>
-{% endfor %}
-{% endif %}
+    <div class="container">
+      <br><head></head>
+      <div class="lead text-left" style="font-size: 30px">
+          <p>
+            <i class="material-icons" style="font-size:36px;">people_outline</i>
+            <strong>Requests</strong>
+          </p>
+      </div>
+        <table class="col-md-8 table-bordered">     
+        {% if myUserName == rides[1] %}
+        {% for i in range(users_length) %}
+          <tr>
+            <td class="lead text-center"><i class="fa fa-user " style="font-size: 24px"></i> {{ user_who_requested[i][2]}}</td>
+            <td class="text-center">
+              <br>
+              <a  class="btn btn-default btn-info " href="/rides_accept/{{rides[0]}}/{{user_who_requested[i][0]}}" >
+              <span class="glyphicon glyphicon-ok-sign"></span> Accept </a>
+              <a  class="btn btn-danger btn-info " href="/rides_reject/{{rides[0]}}/{{user_who_requested[i][0]}}" >
+              <span class="glyphicon glyphicon-remove-sign"></span> Reject </a>
+              <br><br>
+            </td>
+          </tr>
+
+        
+        {% endfor %}
+        {% endif %}
+
+        </table>
+    </div>
+
 
 
 {% endblock %}

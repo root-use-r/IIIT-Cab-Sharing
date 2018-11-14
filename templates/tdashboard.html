@@ -41,9 +41,10 @@
                 <div class="col-sm-3" style='border:2em'>
                   <div class="well">
                     <p><a href="#">My Profile</a></p>
-                    <p  >Hello <strong><em id="username">{{name}}</em></strong></p>
-                    <img src="avatar.jpg" class="img-circle" height="65" width="65" alt="Avatar">
-                  </div>
+                    <p  >Hello <strong ><em id="username" class="text-uppercase">{{username}}</em></strong></p>
+                    <!-- <img src="avatar.jpg" class="img-circle" height="65" width="65" alt="<i class="material-icons">add_a_photo</i>"> -->
+                    <i class="material-icons" style="font-size:48px">add_a_photo</i>
+                 </div>
                   <div class="well">
                     <p><a href="#" id="interests">Interests</a></p>
                     <p>
@@ -81,14 +82,23 @@
                         <div class="panel-body">
                           <!-- <p contenteditable="true">Status: Feeling Blue</p> -->
                           <span class="glyphicon glyphicon-bell"></span>
-                          <strong class="lead">Notifications <span class="badge border border-1">1</span></strong>
+                          <strong class="lead">Notifications <span class="badge border border-1">{{count}}</span></strong>
                         </div>
                         <div class="well-lg">
-                          <p>Notify the user about all the offers and other notifications here</p>
+                          {% if count == 0 %}
+                            <p>No Notifications</p>
+                          {% else %}
+                          <ul >
+                          {% for i in range(count) %}
+                          <li>{{result[i][2]}} <br></li>  
+                          {% endfor %}
+                          {% endif %}
+                        </ul>
                         </div>
                       </div>
                     </div>
                   </div>
+    
 
                   <div class="row">
                     <div class="col-sm-12">

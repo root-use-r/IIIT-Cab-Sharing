@@ -20,8 +20,8 @@
 
             <div  class=" active">
               <ul class="nav nav-pills">
-                <li class="active"><a  href="bookings">Current Bookings</a></li>
-                <li><a  href="booking_history">Booking History</a></li>
+                <li ><a  href="bookings">Current Bookings</a></li>
+                <li class="active"><a  href="bookings_history">Booking History</a></li>
               </ul>
                 <br><br>
                 <div id="current-bookings" class="tab-pane fade in active text-left">
@@ -41,11 +41,9 @@
                    </p>
                  </div>
                  <div class="container-fluid" >
-                    <a href="" class="col-sm-5" ><span class="glyphicon glyphicon-duplicate"></span> Duplicate </a>
-                    <a href="" class="col-sm-2" ><span class="glyphicon glyphicon-user"></span> See co-travellers </a>
+                    <a href="see_cotravellers/{{result[i][0]}}/{{result[i][1]}}" class="col-sm-2" ><span class="glyphicon glyphicon-user"></span> See co-travellers </a>
                     <a href="rides_found/{{result[i][0]}}/{{result[i][1]}}" class="col-sm-2" >
                       <span class="glyphicon glyphicon-eye-open"></span> See ride-offer </a>
-                    <a href="" class="col-sm-1" ><span class="glyphicon glyphicon-pencil"></span> Edit </a>
                     <a href="" class="col-sm-1" ><span class="glyphicon glyphicon-trash"></span> Delete </a>
                     <br><br>
                  </div>
