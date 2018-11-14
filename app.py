@@ -307,6 +307,7 @@ def rides_request(rideId,userName):
 
 
 @app.route('/dashboard')
+@is_logged_in
 def tdashboard():
     username=session['username']
     with sqlite3.connect("CabSharing.db") as con:
@@ -374,7 +375,7 @@ def findcab():
             distance2 = R * c
             temp_date=time.strptime(result[i][8],"%Y-%m-%d")
 
-            if(distance1<5 and distance2<5 and temp_date>=date and result[i][13]==1):
+            if(distance1<5 and distance2<5 and temp_date>=date and result[i][13]==1 and result[i][14]>0):
                 data_to_display.append(result[i])
                 # user.append(result[i][])
                 result1 = cur.execute("SELECT * FROM USERS WHERE userName = ?", [result[i][1]] )
@@ -532,29 +533,50 @@ class RegisterForm(Form):
     ])
     confirm = PasswordField('Confirm Password')
 
+emailotp=0000
+email_toverify=""
 @app.route('/verify', methods=['GET', 'POST'])
 def verify():
-    # otp=random.randrange(1000, 9999, 1)
-    otp=1111
-    subject='Your sharcab OTP is'+ str(otp)
-    msg = Message(subject, sender = 'sankettheflash@gmail.com', recipients = ['shubham.pahuja1996@gmail.com'])
-    msg.body = subject
-    mail.send(msg)
-    print otp
+    global emailotp
+    global email_toverify
+    if 'logged_in' in session:
+        uname = session['username']
+        with sqlite3.connect("CabSharing.db") as con:
+                result = []
+                cur = con.cursor()
+                cur.execute("select * from users where username = ?",[uname])
+                result = cur.fetchall()
+                email_toverify=result[0][4]
+                cur.close()
     if request.method == 'POST':
         eotp = request.form['eotp']
         print eotp
-        if int(eotp)==otp:
-            flash('You are now registered and can log in', 'success')
+        if int(eotp)==emailotp:
+            with sqlite3.connect("CabSharing.db") as con:
+                cur = con.cursor()
+                cur.execute("update users set email_verified=1 where email=?", [email_toverify])
+                con.commit()
+            flash('Your email is verified', 'success')
+            if 'logged_in' in session:
+                 return redirect(url_for('tdashboard'))
             return redirect(url_for('login'))
         else:
             flash('Invalid OTP', 'danger')
+
+    emailotp=random.randrange(1000, 9999, 1)
+    subject='Your sharcab OTP is'+ str(emailotp)
+    msg = Message(subject, sender = 'sankettheflash@gmail.com', recipients = [email_toverify])
+    msg.body = subject
+    mail.send(msg)
+    print emailotp
+
     return render_template('verify.html')
 
 
 # User Register
 @app.route('/register', methods=['GET', 'POST'])
 def register():
+    global email_toverify
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
         name = form.name.data
@@ -571,8 +593,10 @@ def register():
             cur.execute("INSERT INTO users(name, email, username, password,phone,address) VALUES(?,?,?,?,?,?)", (name, email, username, password,contact,address))
 
             con.commit()
+        flash('You are now registered and Please verify your email and phone number', 'success')
+        email_toverify=email
         return redirect(url_for('verify'))
-        flash('You are now registered and can log in', 'success')
+        
 
         return redirect(url_for('login'))
     return render_template('register.html', form=form)
