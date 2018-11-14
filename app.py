@@ -81,7 +81,15 @@ def is_logged_in(f):
 @app.route('/rides_accept/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
 @is_logged_in
 def ride_accept(rideId,userName):
-    reason='Your ride is confirmed.'
+    
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    cur.execute("select * from rides_offered where rideid = ?", [rideId])
+    temp_result= cur.fetchall()
+    con.commit()
+
+
+    reason='Your ride from '+ str(temp_result[0][2]) + ' to ' + str(temp_result[0][3]) +' at ' + str(temp_result[0][8])+ ' is confirmed.'
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
     cur.execute("update rides_requested set accepted=1 where rideId = ? and username = ?" , ( rideId , userName )) 
@@ -98,7 +106,7 @@ def ride_accept(rideId,userName):
     seats_left=ride_data[14] - 1
     cur.execute("update rides_offered set seatsleft=? where rideId = ? " , (seats_left , rideId )) 
     if seats_left==0:
-        reason='Your ride is cancelled because car is full.'
+        reason='Your ride from '+ str(temp_result[0][2]) + ' to ' + str(temp_result[0][3]) +' at ' + str(temp_result[0][8])+ ' is cancelled because car is full.'
         cur.execute("update rides_requested set accepted=3 where rideId = ? and accepted=0" , [rideId]) 
         cur.execute("select * from rides_requested where accepted=3 and rideId= ?", [rideId])
         ridecancelled=cur.fetchall()
@@ -156,7 +164,16 @@ def ride_accept(rideId,userName):
 @app.route('/rides_reject/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
 @is_logged_in
 def ride_reject(rideId,userName):
-    reason='Your ride is rejected.'
+
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    cur.execute("select * from rides_offered where rideid = ?", [rideId])
+    temp_result= cur.fetchall()
+    con.commit()
+
+
+    reason='Your ride from '+ str(temp_result[0][2]) + ' to ' + str(temp_result[0][3]) +' at ' + str(temp_result[0][8])+ ' is rejected by owner.'
+
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
     cur.execute("update rides_requested set accepted=2 where rideId = ? and username = ?" , ( rideId , userName )) 
@@ -504,7 +521,7 @@ def contactus():
 def offer():
     if request.method == 'POST':
         form = {}
-        form['details']= request.form['details']
+        form['details']= ""
         form['source'] = request.form['source']
         form['destination'] = request.form['destination']
         form['date'] = request.form['date']
@@ -517,6 +534,11 @@ def offer():
         form['long2'] = request.form['long2']
         form['valid'] = 1
         username=session['username']
+
+        if int(form['numberOfSeats']) > 3:
+            flash('You can not share more than 3 seats ', 'danger')
+            return render_template('offer_map.html')
+
         with sqlite3.connect("CabSharing.db") as con:
             cur = con.cursor()
             cur.execute("INSERT INTO rides_offered(userName, source, destination, lat1, long1, lat2, long2, offeredDate, offeredTime, offeredPrice, offeredSeats, details, valid,seatsleft) VALUES(? , ? , ? , ? , ? , ? , ? , ? , ? , ? ,? , ? , ? ,?)" , (username , form['source'], form['destination'], form['lat1'], form['long1'], form['lat2'], form['long2'], form['date'], form['time'], form['price'], form['numberOfSeats'], form['details'], form['valid'], form['numberOfSeats'] , ))
