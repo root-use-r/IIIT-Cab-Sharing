@@ -81,7 +81,15 @@ def is_logged_in(f):
 @app.route('/rides_accept/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
 @is_logged_in
 def ride_accept(rideId,userName):
-    reason='Your ride is confirmed.'
+    
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    cur.execute("select * from rides_offered where rideid = ?", [rideId])
+    temp_result= cur.fetchall()
+    con.commit()
+
+
+    reason='Your ride from '+ str(temp_result[0][2]) + ' to ' + str(temp_result[0][3]) +' at ' + str(temp_result[0][8])+ ' is confirmed.'
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
     cur.execute("update rides_requested set accepted=1 where rideId = ? and username = ?" , ( rideId , userName )) 
@@ -98,7 +106,7 @@ def ride_accept(rideId,userName):
     seats_left=ride_data[14] - 1
     cur.execute("update rides_offered set seatsleft=? where rideId = ? " , (seats_left , rideId )) 
     if seats_left==0:
-        reason='Your ride is cancelled because car is full.'
+        reason='Your ride from '+ str(temp_result[0][2]) + ' to ' + str(temp_result[0][3]) +' at ' + str(temp_result[0][8])+ ' is cancelled because car is full.'
         cur.execute("update rides_requested set accepted=3 where rideId = ? and accepted=0" , [rideId]) 
         cur.execute("select * from rides_requested where accepted=3 and rideId= ?", [rideId])
         ridecancelled=cur.fetchall()
@@ -156,7 +164,16 @@ def ride_accept(rideId,userName):
 @app.route('/rides_reject/<string:rideId>/<string:userName>', methods=['GET', 'POST'])
 @is_logged_in
 def ride_reject(rideId,userName):
-    reason='Your ride is rejected.'
+
+    con = sqlite3.connect("CabSharing.db")
+    cur = con.cursor()
+    cur.execute("select * from rides_offered where rideid = ?", [rideId])
+    temp_result= cur.fetchall()
+    con.commit()
+
+
+    reason='Your ride from '+ str(temp_result[0][2]) + ' to ' + str(temp_result[0][3]) +' at ' + str(temp_result[0][8])+ ' is rejected by owner.'
+
     con = sqlite3.connect("CabSharing.db")
     cur = con.cursor()
     cur.execute("update rides_requested set accepted=2 where rideId = ? and username = ?" , ( rideId , userName )) 
@@ -517,6 +534,11 @@ def offer():
         form['long2'] = request.form['long2']
         form['valid'] = 1
         username=session['username']
+
+        if int(form['numberOfSeats']) > 3:
+            flash('You can not share more than 3 seats ', 'danger')
+            return render_template('offer_map.html')
+
         with sqlite3.connect("CabSharing.db") as con:
             cur = con.cursor()
             cur.execute("INSERT INTO rides_offered(userName, source, destination, lat1, long1, lat2, long2, offeredDate, offeredTime, offeredPrice, offeredSeats, details, valid,seatsleft) VALUES(? , ? , ? , ? , ? , ? , ? , ? , ? , ? ,? , ? , ? ,?)" , (username , form['source'], form['destination'], form['lat1'], form['long1'], form['lat2'], form['long2'], form['date'], form['time'], form['price'], form['numberOfSeats'], form['details'], form['valid'], form['numberOfSeats'] , ))
@@ -652,14 +674,19 @@ def profile():
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
-        
-
+        birth_year = request.form['birthyear']
+        bio = request.form['bio']
+        print bio
+        cur.execute("update users set name=?,email=?,phone=?, birth_year=?,bio=? where username=?", (name, email,phone,birth_year,bio,session['username']))
+        con.commit()
+        flash("Saved successfully.")
+        cur.close()
     return render_template('profile.html',result=result)
 
 
 # User Register
 @app.route('/register', methods=['GET', 'POST'])
-def register():
+def registr():
     global email_toverify
     form = RegisterForm(request.form)
     if request.method == 'POST' and form.validate():
@@ -671,6 +698,15 @@ def register():
         contact = form.contact.data
         address = form.address.data
 
+
+        with sqlite3.connect("CabSharing.db") as con:
+            cur = con.cursor()
+            cur.execute("select * from users where username=? or email=? or phone=?", (username, email,contact))
+            result=cur.fetchall()
+            if result:
+                flash('Username or email or phone already taken', 'danger')
+                return render_template('register.html', form=form)
+            con.commit()
 
         with sqlite3.connect("CabSharing.db") as con:
             cur = con.cursor()
@@ -756,7 +792,7 @@ def login():
             error = 'Username not found'
             return render_template('login.html', error=error)
 
-    return render_template('login.html')
+    return render_template('Googlesignin.html')
 
 
 # Check if user logged in
